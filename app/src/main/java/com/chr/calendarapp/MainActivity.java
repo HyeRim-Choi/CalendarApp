@@ -5,6 +5,7 @@ import java.util.Calendar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Calendar cal_tmp = Calendar.getInstance();
         Calendar cal = Calendar.getInstance();
         ArrayList Data = new ArrayList();
@@ -53,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
         GridView gridview = (GridView) findViewById(R.id.gridview);
         // 어댑터를 GridView 객체에 연결
         gridview.setAdapter(adapt);
+        //날짜선택시 Toast메시지
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this,
+                        "" + cal.get(Calendar.YEAR)+ "." + cal.get(Calendar.MONTH) + "."+ (position),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //이번년 이번달설정
 
