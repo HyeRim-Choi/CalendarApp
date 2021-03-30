@@ -2,6 +2,7 @@ package com.chr.calendarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +23,7 @@ public class MonthViewActivity extends AppCompatActivity {
 
     TextView text;
 
+    // 캘린더를 나타내는 gridView
     GridView gridview;
 
     // 버튼
@@ -34,6 +36,9 @@ public class MonthViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_month_view);
 
+        // intent 가져온다
+        Intent i = getIntent();
+
         btn_prev = findViewById(R.id.btn_prev);
         btn_next = findViewById(R.id.btn_next);
 
@@ -45,11 +50,15 @@ public class MonthViewActivity extends AppCompatActivity {
         cal = Calendar.getInstance();
 
         // 현재 년도 받기
-        year = cal.get(Calendar.YEAR);
+        year = i.getIntExtra("year",cal.get(Calendar.YEAR));
         // 현재 월 받기
-        month = cal.get(Calendar.MONTH)+1;
+        month = i.getIntExtra("month",cal.get(Calendar.MONTH)+1);
 
-        // 캘린더 만드는 함수 호출
+        //버튼리스너
+        btn_prev.setOnClickListener(click);
+        btn_next.setOnClickListener(click);
+
+        // 캘린더를 만드는 함수 호출
         calendarView(year,month);
 
     }
@@ -97,10 +106,6 @@ public class MonthViewActivity extends AppCompatActivity {
             }
         });
 
-
-        //버튼리스너
-        btn_prev.setOnClickListener(click);
-        btn_next.setOnClickListener(click);
     }
 
     // 바튼 클릭 시 여기로 들어옴
@@ -122,8 +127,15 @@ public class MonthViewActivity extends AppCompatActivity {
                         month = 12;
                     }
 
-                    // 캘린더 만드는 함수 호출
-                   calendarView(year, month);
+                    // Intent로 화면 전환
+                    Intent i_prev = new Intent(getApplicationContext(), MonthViewActivity.class);
+                    // 값을 가지고 이동
+                    i_prev.putExtra("year", year);
+                    i_prev.putExtra("month", month);
+                    // 화면 전환
+                    startActivity(i_prev);
+                    // 현재 액티비티 종료
+                    finish();
                     break;
 
                 case R.id.btn_next:
@@ -139,10 +151,15 @@ public class MonthViewActivity extends AppCompatActivity {
                         month = 1;
                     }
 
-                    // 캘린더 만드는 함수 호출
-                    calendarView(year, month);
-
-
+                    // Intent로 화면 전환
+                    Intent i_next = new Intent(getApplicationContext(), MonthViewActivity.class);
+                    // 값을 가지고 이동
+                    i_next.putExtra("year", year);
+                    i_next.putExtra("month", month);
+                    // 화면 전환
+                    startActivity(i_next);
+                    // 현재 액티비티 종료
+                    finish();
                     break;
             }
         }
