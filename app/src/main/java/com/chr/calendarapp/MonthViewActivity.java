@@ -101,7 +101,7 @@ public class MonthViewActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Toast.makeText(MonthViewActivity.this,
-                        "" + year + "." + month + "."+ (position),
+                        "" + year + "." + month + "."+ (position+1-startday+1),
                         Toast.LENGTH_SHORT).show();
             }
         });
