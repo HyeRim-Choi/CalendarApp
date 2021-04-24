@@ -3,6 +3,7 @@ package com.chr.calendarapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+    }
+
+    // 화면 회전이 되어도 동일한 모양을 나타내기 위해 onResume()에 코드 삽입
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         my_toolbar = findViewById(R.id.my_toolbar);
         // toolbar 설정
         setSupportActionBar(my_toolbar);
@@ -41,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         // toolbar title 설정
         my_toolbar.setTitle(year + "년 " + month + "월");
-
     }
+
 
     // AppBar에 오버플로우 메뉴 추가
     @Override
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     // 오버플로우 메뉴 선택 시 이벤트 처리
     @Override
@@ -62,12 +71,30 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.week:
                 // 주간 달력으로 이동
-                WeekFragment detailsFragment = new WeekFragment();
+                WeekFragment detailsFragment = new WeekFragment(year, month);
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendar, detailsFragment).commit();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    // 화면 회전
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // 세로 모드
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            onResume();
+        }
+
+        // 가로 모드
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            onResume();
+        }
+
     }
 }

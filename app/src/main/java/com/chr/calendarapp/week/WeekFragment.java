@@ -23,16 +23,18 @@ import java.util.Calendar;
 
 public class WeekFragment extends Fragment {
 
+    int year, month;
+
+    public WeekFragment(int year, int month) {
+        this.year = year;
+        this.month = month;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_week, container, false);
-
-        Calendar calendar = Calendar.getInstance();
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
 
         // ViewPager 추가
         ViewPager2 vpPager = v.findViewById(R.id.vpPager);
@@ -40,7 +42,8 @@ public class WeekFragment extends Fragment {
         vpPager.setAdapter(adapter);
 
         // 먼저 보여질 창
-        vpPager.setCurrentItem(0);
+        vpPager.setCurrentItem(Integer.MAX_VALUE / 2);
+
 
         return v;
     }
