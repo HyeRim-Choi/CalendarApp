@@ -28,23 +28,27 @@ public class WeekDayFragment extends Fragment {
     // 날짜 ArrayList
     ArrayList<Integer> dayWeek;
 
+    // 월의 주 개수 받기
+    int weekNum;
 
-    public WeekDayFragment(ArrayList<Integer> dayList, int weekNum) {
+
+    public WeekDayFragment(ArrayList<Integer> dayList, int weekNum, int cnt) {
+        this.weekNum = weekNum;
+
         Log.i("WeekDayConstructor", "come in");
+
+        Log.i("cnt", "" + cnt);
+
 
         dayWeek = new ArrayList<>();
 
-        for(int i = 0; i < weekNum ; i++){
-            // getDay 함수 호출
-            int day = getDay(dayList, weekNum, i);
+        // getDay 함수 호출
+        int day = getDay(dayList, cnt);
 
-            // 날짜 ArrayList
-            for(int j = 7 * i ; j < day ; j++){
-                dayWeek.add(dayList.get(j));
-                Log.i("WeekDayConstructor", "" + dayList.get(j));
-            }
+        // 1,2,3 각각 주의 날짜 ArrayList
+        for(int i = 7 * cnt ; i < day ; i++){
+            dayWeek.add(dayList.get(i));
         }
-
 
         // GridView Week 칸 ArrayList
         week = new ArrayList();
@@ -54,24 +58,28 @@ public class WeekDayFragment extends Fragment {
 
     }
 
+
     // 마지막 주의 날짜 Index 벗어나지 않게 가져오는 함수
-    public int getDay(ArrayList<Integer> dayList, int weekNum, int i){
+    public int getDay(ArrayList<Integer> dayList, int cnt){
         int day;
 
-        // i가 마지막 주이면
-        if(i == weekNum - 1){
-            // 마지막 날짜까지 들어있는 index까지만 저장할 수 있도록
+        // 마지막 주이면
+        if(weekNum - 1 == cnt){
+            // 마지막 날짜까지 들어있는 index까지만 날짜 ArrayList에 저장할 수 있도록
             day = dayList.size();
         }
 
         // 아니라면
         else{
             // 1주의 7일 날짜를 다 저장하도록 day setting
-            day = 7 * (i + 1);
+            day = 7 * (cnt + 1);
         }
+
+        Log.i("day", "" + day);
 
         return day;
     }
+
 
 
     @Override
@@ -93,7 +101,7 @@ public class WeekDayFragment extends Fragment {
         ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week);
         grid_week.setAdapter(adapt_grid);
 
-        // 날짜
+        // 주 날짜
         ArrayAdapter<Integer> adapt_week = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, dayWeek){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {

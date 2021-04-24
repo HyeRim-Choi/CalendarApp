@@ -51,6 +51,23 @@ public class MainActivity extends AppCompatActivity {
         my_toolbar.setTitle(year + "년 " + month + "월");
     }
 
+    // 화면 회전
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // 세로 모드
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            onResume();
+        }
+
+        // 가로 모드
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            onResume();
+        }
+
+    }
+
 
     // AppBar에 오버플로우 메뉴 추가
     @Override
@@ -71,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.week:
                 // 주간 달력으로 이동
-                WeekFragment detailsFragment = new WeekFragment(year, month);
-                getSupportFragmentManager().beginTransaction().replace(R.id.calendar, detailsFragment).commit();
+                WeekFragment weekFragment = new WeekFragment(year, month);
+                getSupportFragmentManager().beginTransaction().replace(R.id.calendar, weekFragment).commit();
                 return true;
 
             default:
@@ -80,21 +97,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    // 화면 회전
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // 세로 모드
-        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            onResume();
-        }
-
-        // 가로 모드
-        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            onResume();
-        }
-
-    }
 }

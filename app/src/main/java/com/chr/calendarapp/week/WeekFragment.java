@@ -41,10 +41,11 @@ public class WeekFragment extends Fragment {
         FragmentStateAdapter adapter = new WeekPagerAdapter(getActivity(), year, month);
         vpPager.setAdapter(adapter);
 
-        // 먼저 보여질 창
-        vpPager.setCurrentItem(Integer.MAX_VALUE / 2);
+        // 먼저 보여질 창(Integer Max값의 중간 값으로 세팅)
+        vpPager.setCurrentItem(1073741820, false);
 
 
         return v;
     }
+
 }
