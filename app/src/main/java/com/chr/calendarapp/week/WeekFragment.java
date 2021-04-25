@@ -42,7 +42,7 @@ public class WeekFragment extends Fragment {
         vpPager.setAdapter(adapter);
 
         // 먼저 보여질 창(Integer Max값의 중간 값으로 세팅)
-        vpPager.setCurrentItem(1073741820, false);
+        vpPager.setCurrentItem(15, false);
 
 
         return v;

@@ -37,8 +37,6 @@ public class WeekDayFragment extends Fragment {
 
         Log.i("WeekDayConstructor", "come in");
 
-        Log.i("cnt", "" + cnt);
-
 
         dayWeek = new ArrayList<>();
 
