@@ -5,16 +5,18 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
+import com.chr.calendarapp.week.WeekDayFragment;
 import com.chr.calendarapp.week.WeekFragment;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements WeekDayFragment.OnSetYearMonthListener {
 
     // Toolbar
     Toolbar my_toolbar;
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     // 캘린더
     Calendar cal;
 
-    int year, month;
+    int year, month, date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         year = cal.get(Calendar.YEAR);
         // 현재 월 받기
         month = cal.get(Calendar.MONTH)+1;
+        // 현재 일 받기
+        date = cal.get(Calendar.DATE);
 
         // toolbar title 설정
         my_toolbar.setTitle(year + "년 " + month + "월");
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.week:
                 // 주간 달력으로 이동
-                WeekFragment weekFragment = new WeekFragment(year, month);
+                WeekFragment weekFragment = new WeekFragment(year, month, date);
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendar, weekFragment).commit();
                 return true;
 
@@ -97,4 +101,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onSetYearMonth(int setYear, int setMonth) {
+        Log.i("MainActivity", ""+setYear+"년"+setMonth);
+        // toolbar title 설정
+        my_toolbar.setTitle(setYear + "년 " + setMonth + "월");
+    }
 }

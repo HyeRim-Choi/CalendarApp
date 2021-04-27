@@ -1,5 +1,6 @@
 package com.chr.calendarapp.week;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chr.calendarapp.MainActivity;
 import com.chr.calendarapp.R;
 
 import java.util.ArrayList;
@@ -46,11 +48,23 @@ public class WeekDayFragment extends Fragment {
     // 날짜 GridView 클릭했는지 확인(클릭했으면 클릭한 격자 배경색을 화이트로 바꾸기 위해)
     int chkGridWeekDayClick;
 
-    public WeekDayFragment(ArrayList<Integer> dayList, int weekNum, int cnt) {
+    Activity activity;
+
+    public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int setYear, int setMonth) {
         this.weekNum = weekNum;
 
-        Log.i("WeekDayConstructor", "come in");
+        this.activity = activity;
 
+        // Activity AppBar의 년도, 월을 수정하기 위해 Activity 호출
+        if(setYear!=0){
+            Log.i("WeekDayAppBar", "come in");
+
+            // 선택된 항목 위치(position)을 OnSetYearMonthListener 인터페이스를 구현한 액티비티로 전달
+            if (activity instanceof OnSetYearMonthListener)
+                ((OnSetYearMonthListener)activity).onSetYearMonth(setYear, setMonth);
+        }
+
+        Log.i("WeekDayConstructor", "come in");
 
         dayWeek = new ArrayList<>();
 
@@ -186,8 +200,11 @@ public class WeekDayFragment extends Fragment {
             }
         });
 
-
-
         return v;
+    }
+
+    // 인터페이스 추가 정의
+    public interface OnSetYearMonthListener {
+        public void onSetYearMonth(int year, int month);
     }
 }

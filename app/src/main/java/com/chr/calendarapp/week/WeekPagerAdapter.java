@@ -1,6 +1,7 @@
 package com.chr.calendarapp.week;
 
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -23,14 +24,22 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     // 첫째 주인지 둘째 주인지 알기 위한 변수
     int cnt, chkCnt;
 
-    int year, month, date = 27;
+    int year, month, date;
+
+    // Activity AppBar 년도 월 변경을 위해 Fragment로 전달하는 year, month
+    int setYear, setMonth;
+
+    Activity activity;
 
 
-    public WeekPagerAdapter(FragmentActivity fa, int year, int month) {
+    public WeekPagerAdapter(FragmentActivity fa, int year, int month, int date) {
         super(fa);
+        this.activity = fa;
         this.year = year;
         this.month = month;
+        this.date = date;
 
+        // 일 받아서 현재 날짜로 초기 설정(date 이용)
 
         cnt = -1;
 
@@ -49,6 +58,8 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         Log.i("postition", "" + position);
         Log.i("cnt ", "" + cnt);
 
+        setYear = 0;
+        setMonth = 0;
 
         // 현재 position이 전 position보다 작다면
         if(currentPosition < position){
@@ -118,8 +129,9 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         position = currentPosition;
 
         Log.i("cnt : ", "" + cnt);
+        Log.i("setMonth : ", "" + setMonth);
 
-        return new WeekDayFragment(getCalendarDay(year, month), weekNum, cnt);
+        return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth);
 
     }
 
@@ -155,6 +167,10 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
             month = 1;
         }
 
+        // Next 년도, 월 전달
+        setYear = year;
+        setMonth = month;
+
     }
 
 
@@ -173,6 +189,9 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
             month = 12;
         }
 
+        // Prev 년도, 월 전달
+        setYear = year;
+        setMonth = month;
 
     }
 

@@ -23,11 +23,12 @@ import java.util.Calendar;
 
 public class WeekFragment extends Fragment {
 
-    int year, month;
+    int year, month, date;
 
-    public WeekFragment(int year, int month) {
+    public WeekFragment(int year, int month, int date) {
         this.year = year;
         this.month = month;
+        this.date = date;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class WeekFragment extends Fragment {
 
         // ViewPager 추가
         ViewPager2 vpPager = v.findViewById(R.id.vpPager);
-        FragmentStateAdapter adapter = new WeekPagerAdapter(getActivity(), year, month);
+        FragmentStateAdapter adapter = new WeekPagerAdapter(getActivity(), year, month, date);
         vpPager.setAdapter(adapter);
 
         // 먼저 보여질 창(Integer Max값의 중간 값으로 세팅)
