@@ -3,10 +3,10 @@
 
     <item
         android:id="@+id/month"
-        android:title="월"/>
+        android:title="@string/month"/>
 
     <item
         android:id="@+id/week"
-        android:title="주"/>
+        android:title="@string/week"/>
 
 </menu>
