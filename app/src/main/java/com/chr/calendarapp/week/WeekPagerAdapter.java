@@ -11,9 +11,8 @@ import java.util.Calendar;
 
 
 public class WeekPagerAdapter extends FragmentStateAdapter {
-
-    // 처음 시작하는 페이지
-    int startPage = 15;
+    // 처음 시작 페이지
+    int startPage = 1000;
 
     // 월의 주 개수 받기
     int weekNum;
@@ -22,9 +21,9 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     int position;
 
     // 첫째 주인지 둘째 주인지 알기 위한 변수
-    int cnt;
+    int cnt, chkCnt;
 
-    int year, month;
+    int year, month, date = 27;
 
 
     public WeekPagerAdapter(FragmentActivity fa, int year, int month) {
@@ -32,7 +31,10 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         this.year = year;
         this.month = month;
 
+
         cnt = -1;
+
+        position = startPage;
 
         // 해당 달 weekNum 세팅
         setWeekNum();
@@ -47,6 +49,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         Log.i("postition", "" + position);
         Log.i("cnt ", "" + cnt);
 
+
         // 현재 position이 전 position보다 작다면
         if(currentPosition < position){
             // 전 주로 세팅
@@ -58,7 +61,24 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         }
 
 
-        if(cnt == -1){
+        // 계속 한 쪽으로 슬라이딩하다가 반대쪽으로 슬라이딩을 하면 position값이 4 차이가 남
+        // 계속 왼쪽으로 슬라이딩을 하다가 오른쪽으로 슬라이딩을 전환하면
+        if(currentPosition - position >= 3){
+            Log.i("current-position1", "come in");
+            cnt+=3;
+            Log.i("current-position1", "cnt : " + cnt);
+        }
+        // 계속 오른쪽으로 슬라이딩을 하다가 왼쪽으로 슬라이딩을 전환하면
+       else if(currentPosition - position <= -3){
+            Log.i("current-position2", "come in");
+            cnt-=3;
+            Log.i("current-position2", "cnt : " + cnt);
+        }
+
+        // 다음 달로 바뀌면
+        if(cnt <= -1){
+            chkCnt = cnt;
+
             Log.i("prevMonthPosition : ", "" + "come in");
             // year, month 세팅
             setPrevYearMonth();
@@ -68,9 +88,17 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
 
             // cnt 세팅
             cnt = weekNum - 1;
+
+            // 다음 달에서 이전 달로 슬라이딩하면
+            if(chkCnt < -1){
+                cnt--;
+            }
         }
 
-        else if(cnt == weekNum){
+        // 이전 달로 바뀌면
+        else if(cnt >= weekNum){
+            chkCnt = cnt;
+
             Log.i("nextMonthPosition : ", "" + "come in");
             // year, month 세팅
             setNextYearMonth();
@@ -80,19 +108,14 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
 
             // cnt 세팅
             cnt = 0;
-        }
 
-
-        if(currentPosition - position == 4){
-            cnt+=3;
+            // 이전 달에서 다음 달로 슬라이딩하면
+            if(chkCnt > weekNum){
+                cnt++;
+            }
         }
-        else if(currentPosition - position == -4){
-            cnt-=3;
-        }
-
 
         position = currentPosition;
-
 
         Log.i("cnt : ", "" + cnt);
 
@@ -101,6 +124,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     }
 
 
+    // 주 개수 구하는 함수
     public void setWeekNum(){
         weekNum = 0;
 

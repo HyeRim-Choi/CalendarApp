@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chr.calendarapp.R;
 
@@ -31,6 +33,18 @@ public class WeekDayFragment extends Fragment {
     // 월의 주 개수 받기
     int weekNum;
 
+    // 날짜 GridView 전에 클릭했던 position
+    int gridWeekDayPosition;
+
+    // 격자 GridView 전에 클릭했던 position
+    int gridWeekPosition;
+
+    /* 만약 날짜 GridView를 클릭했다가 격자 GridView를 클릭했으면 클릭한 날짜 GridView 배경색을 화이트로 바꾸기 위해 */
+    // 격자 GridView 클릭했는지 확인
+    int chkGridWeekClick;
+
+    // 날짜 GridView 클릭했는지 확인(클릭했으면 클릭한 격자 배경색을 화이트로 바꾸기 위해)
+    int chkGridWeekDayClick;
 
     public WeekDayFragment(ArrayList<Integer> dayList, int weekNum, int cnt) {
         this.weekNum = weekNum;
@@ -50,7 +64,7 @@ public class WeekDayFragment extends Fragment {
 
         // GridView Week 칸 ArrayList
         week = new ArrayList();
-        for(int i=0;i<24*7;i++){
+        for(int i=0;i<23*7;i++){
             week.add("");
         }
 
@@ -92,12 +106,17 @@ public class WeekDayFragment extends Fragment {
 
         // 0 ~ 23 시간
         for(int i = 1; i < 24; i++){
-            txt_time.append(i+"\n\n\n");
+            txt_time.append(i+"");
+
+            if(i != 23){
+                 txt_time.append("\n\n\n");
+            }
         }
 
-        // week의 칸
+        // week의 격자 칸
         ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week);
         grid_week.setAdapter(adapt_grid);
+
 
         // 주 날짜
         ArrayAdapter<Integer> adapt_week = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, dayWeek){
@@ -112,6 +131,61 @@ public class WeekDayFragment extends Fragment {
         };
 
         grid_week_day.setAdapter(adapt_week);
+
+
+        // 날짜 클릭 시
+        grid_week_day.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int currentPosition, long id) {
+                chkGridWeekDayClick = 1;
+
+                // 격자 칸을 클릭하고 날짜 칸을 클릭했으면 격자 칸 배경색을 화이트로 바꾸기
+                if(chkGridWeekClick == 1){
+                    grid_week.getChildAt(gridWeekPosition).setBackgroundColor(Color.WHITE);
+                    grid_week_day.getChildAt(gridWeekPosition % 7).setBackgroundColor(Color.WHITE);
+                }
+
+                // 전에 선택했던 날짜 배경색 화이트로 변경
+                grid_week_day.getChildAt(gridWeekDayPosition).setBackgroundColor(Color.WHITE);
+                // 선택된 날짜의 배경색 변경
+                grid_week_day.getChildAt(currentPosition).setBackgroundColor(Color.CYAN);
+
+                gridWeekDayPosition = currentPosition;
+
+                chkGridWeekClick = 0;
+            }
+        });
+
+
+        // 격자 클릭 시
+        grid_week.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int currentPosition, long id) {
+                chkGridWeekClick = 1;
+
+                // 날짜 칸을 클릭하고 격자 칸을 클릭했으면 날짜 칸 배경색을 화이트로 바꾸기
+                if(chkGridWeekDayClick == 1){
+                    grid_week_day.getChildAt(gridWeekDayPosition).setBackgroundColor(Color.WHITE);
+                }
+
+                // 전에 선택했던 격자 배경색 화이트로 변경
+                grid_week.getChildAt(gridWeekPosition).setBackgroundColor(Color.WHITE);
+                // 전에 선택된 격자에 해당되는 날짜의 배경색도 변경
+                grid_week_day.getChildAt(gridWeekPosition % 7).setBackgroundColor(Color.WHITE);
+
+                // 선택된 격자의 배경색 변경
+                grid_week.getChildAt(currentPosition).setBackgroundColor(Color.CYAN);
+                // 선택된 격자에 해당되는 날짜의 배경색도 변경
+                grid_week_day.getChildAt(currentPosition % 7).setBackgroundColor(Color.CYAN);
+
+                Toast.makeText(getContext(), "position : "+currentPosition, Toast.LENGTH_SHORT).show();
+
+                gridWeekPosition = currentPosition;
+
+                chkGridWeekDayClick = 0;
+            }
+        });
+
 
 
         return v;
