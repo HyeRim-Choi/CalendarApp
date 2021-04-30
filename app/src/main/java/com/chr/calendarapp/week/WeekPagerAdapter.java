@@ -24,6 +24,8 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     // 첫째 주인지 둘째 주인지 알기 위한 변수
     int cnt, chkCnt;
 
+    boolean chkPosition;
+
     int year, month, date;
 
     // Activity AppBar 년도 월 변경을 위해 Fragment로 전달하는 year, month
@@ -72,21 +74,23 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         }
 
 
-        // 계속 한 쪽으로 슬라이딩하다가 반대쪽으로 슬라이딩을 하면 position값이 4 차이가 남
+        // 계속 한 쪽으로 슬라이딩하다가 반대쪽으로 슬라이딩을 하면 position값이 3 이상 차이가 남
         // 계속 왼쪽으로 슬라이딩을 하다가 오른쪽으로 슬라이딩을 전환하면
         if(currentPosition - position >= 3){
+            chkPosition = true;
             Log.i("current-position1", "come in");
             cnt+=3;
             Log.i("current-position1", "cnt : " + cnt);
         }
         // 계속 오른쪽으로 슬라이딩을 하다가 왼쪽으로 슬라이딩을 전환하면
        else if(currentPosition - position <= -3){
+            chkPosition = true;
             Log.i("current-position2", "come in");
             cnt-=3;
             Log.i("current-position2", "cnt : " + cnt);
         }
 
-        // 다음 달로 바뀌면
+        // 이전 달로 바뀌면
         if(cnt <= -1){
             chkCnt = cnt;
 
@@ -101,12 +105,12 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
             cnt = weekNum - 1;
 
             // 다음 달에서 이전 달로 슬라이딩하면
-            if(chkCnt < -1){
+            if(chkCnt < -1 && chkPosition == true){
                 cnt--;
             }
         }
 
-        // 이전 달로 바뀌면
+        // 다음 달로 바뀌면
         else if(cnt >= weekNum){
             chkCnt = cnt;
 
@@ -121,12 +125,19 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
             cnt = 0;
 
             // 이전 달에서 다음 달로 슬라이딩하면
-            if(chkCnt > weekNum){
+            if(chkCnt > weekNum && chkPosition == true){
                 cnt++;
             }
         }
 
+        // Year, Month가 변할 때마다 AppBar를 세팅하기 위한 if문
+        if(cnt == 1 || cnt == weekNum - 2){
+            setYear = year;
+            setMonth = month;
+        }
+
         position = currentPosition;
+        chkPosition = false;
 
         Log.i("cnt : ", "" + cnt);
         Log.i("setMonth : ", "" + setMonth);
@@ -168,8 +179,8 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         }
 
         // Next 년도, 월 전달
-        setYear = year;
-        setMonth = month;
+        //setYear = year;
+        //setMonth = month;
 
     }
 
@@ -190,8 +201,8 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         }
 
         // Prev 년도, 월 전달
-        setYear = year;
-        setMonth = month;
+        //setYear = year;
+        //setMonth = month;
 
     }
 
