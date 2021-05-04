@@ -22,7 +22,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     int position;
 
     // 첫째 주인지 둘째 주인지 알기 위한 변수
-    int cnt, chkCnt;
+    int cnt, chkCnt, chkConstructor;
 
     boolean chkPosition;
 
@@ -41,7 +41,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         this.month = month;
         this.date = date;
 
-        // 일 받아서 현재 날짜로 초기 설정(date 이용)
+        chkConstructor = 1;
 
         cnt = -1;
 
@@ -59,6 +59,13 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         Log.i("postitionCurr", "" + currentPosition);
         Log.i("postition", "" + position);
         Log.i("cnt ", "" + cnt);
+
+        if(chkConstructor == 1){
+            cnt = setCalendarPage() - 1;
+            chkConstructor = 0;
+            return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, chkConstructor);
+        }
+
 
         setYear = 0;
         setMonth = 0;
@@ -137,13 +144,41 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         }
 
         position = currentPosition;
+
         chkPosition = false;
 
         Log.i("cnt : ", "" + cnt);
         Log.i("setMonth : ", "" + setMonth);
 
-        return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth);
+        return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, -1);
 
+    }
+
+    // 캘린더 초기 상태 만들기
+    public int setCalendarPage(){
+        // 일 받아서 현재 날짜로 캘린더 초기 설정
+        ArrayList<Integer> dayList = getCalendarDay(year, month);
+
+        Log.i("setCalendarPage", "come in");
+
+        int setCnt = 0;
+
+        for(int i=0;i<dayList.size();i++){
+
+            Log.i("setCalendarPage", "come in");
+
+            if(i%7 == 0){
+                setCnt++;
+            }
+
+
+            if(dayList.get(i) == (Integer) date){
+                break;
+            }
+
+        }
+
+        return setCnt;
     }
 
 

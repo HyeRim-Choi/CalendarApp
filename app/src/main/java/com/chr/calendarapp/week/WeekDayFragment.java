@@ -48,12 +48,17 @@ public class WeekDayFragment extends Fragment {
     // 날짜 GridView 클릭했는지 확인(클릭했으면 클릭한 격자 배경색을 화이트로 바꾸기 위해)
     int chkGridWeekDayClick;
 
+    // 캘린더 초기 설정(배경색)
+    int chkConstructor;
+
     Activity activity;
 
-    public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int setYear, int setMonth) {
+    public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int setYear, int setMonth, int chkConstructor) {
         this.weekNum = weekNum;
 
         this.activity = activity;
+
+        this.chkConstructor = chkConstructor;
 
         // Activity AppBar의 년도, 월을 수정하기 위해 Activity 호출
         if(setYear!=0){
@@ -199,6 +204,12 @@ public class WeekDayFragment extends Fragment {
                 chkGridWeekDayClick = 0;
             }
         });
+
+        // 캘린더 초기 설정
+        if(chkConstructor == 0){
+            grid_week.getChildAt(1).setBackgroundColor(Color.CYAN);
+            //grid_week_day.getChildAt(gridWeekPosition % 7).setBackgroundColor(Color.CYAN);
+        }
 
         return v;
     }
