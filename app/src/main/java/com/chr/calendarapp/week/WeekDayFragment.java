@@ -55,7 +55,6 @@ public class WeekDayFragment extends Fragment {
 
     public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int setYear, int setMonth, int chkConstructor) {
         this.weekNum = weekNum;
-
         this.activity = activity;
 
         this.chkConstructor = chkConstructor;
@@ -79,7 +78,7 @@ public class WeekDayFragment extends Fragment {
         // 1,2,3 각각 주의 날짜 ArrayList
         for(int i = 7 * cnt ; i < day ; i++){
             dayWeek.add(dayList.get(i));
-        }
+        };
 
         // GridView Week 칸 ArrayList
         week = new ArrayList();

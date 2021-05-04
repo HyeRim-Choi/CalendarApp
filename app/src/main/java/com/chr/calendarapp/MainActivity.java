@@ -11,12 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
+import com.chr.calendarapp.month.MonthDayFragment;
+import com.chr.calendarapp.month.MonthFragment;
 import com.chr.calendarapp.week.WeekDayFragment;
 import com.chr.calendarapp.week.WeekFragment;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements WeekDayFragment.OnSetYearMonthListener {
+public class MainActivity extends AppCompatActivity implements WeekDayFragment.OnSetYearMonthListener , MonthDayFragment.OnSetYearMonthListener {
 
     // Toolbar
     Toolbar my_toolbar;
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
     Calendar cal;
 
     int year, month, date;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
         switch (item.getItemId()) {
             case R.id.month:
                 // 월간 달력으로 이동
+                MonthFragment monthFragment = new MonthFragment(year, month, date);
+                getSupportFragmentManager().beginTransaction().replace(R.id.calendar, monthFragment).commit();
                 return true;
 
             case R.id.week:
