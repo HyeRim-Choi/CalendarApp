@@ -22,14 +22,9 @@ public class MonthPagerAdapter extends FragmentStateAdapter {
 
     // 페이지 넘기기 전의 position
     int position;
-
-
     static int year, month, date;
-    int cnt =0;
-    int view = 1000;
 
     Activity activity;
-
 
     public MonthPagerAdapter(FragmentActivity fa, int year, int month, int date) {
         super(fa);
@@ -40,7 +35,6 @@ public class MonthPagerAdapter extends FragmentStateAdapter {
 
         position = startPage;
     }
-
 
     // 각 페이지를 나타내는 프래그먼트 반환
     @Override
