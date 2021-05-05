@@ -22,7 +22,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     int position;
 
     // 첫째 주인지 둘째 주인지 알기 위한 변수
-    int cnt, chkCnt, chkConstructor;
+    int cnt, chkCnt, chkDate;
 
     boolean chkPosition;
 
@@ -41,7 +41,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         this.month = month;
         this.date = date;
 
-        chkConstructor = 1;
+        chkDate = 1;
 
         cnt = -1;
 
@@ -60,10 +60,11 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         Log.i("postition", "" + position);
         Log.i("cnt ", "" + cnt);
 
-        if(chkConstructor == 1){
+        // 첫 화면에 현재 날짜가 있는 페이지로 세팅
+        if(chkDate == 1){
             cnt = setCalendarPage() - 1;
-            chkConstructor = 0;
-            return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, chkConstructor);
+            chkDate = date;
+            return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, chkDate);
         }
 
 
