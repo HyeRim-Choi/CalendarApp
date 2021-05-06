@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
     Calendar cal;
 
     int year, month, date;
+
+    public static boolean chk = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +65,13 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
 
         // 세로 모드
         if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            chk = true;
             onResume();
         }
 
         // 가로 모드
         if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            chk = false;
             onResume();
         }
 
