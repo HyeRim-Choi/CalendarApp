@@ -7,14 +7,12 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chr.calendarapp.MainActivity;
@@ -23,17 +21,12 @@ import com.chr.calendarapp.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the  factory method to
- * create an instance of this fragment.
- */
 public class MonthDayFragment extends Fragment {
-    private static final String ARG_PARAM1 = "index";
     GridView grid_month, x;
     ArrayList calendarDay;
     Activity activity;
     int year, month ,tmppos;
+
     Calendar cal = Calendar.getInstance();
 
     public MonthDayFragment(Activity activity, ArrayList calendarDay, int year, int month) {
@@ -58,16 +51,22 @@ public class MonthDayFragment extends Fragment {
             }
         }
 
-//        View v = inflater.inflate(R.layout.fragment_month_day, container, false);
-//        grid_month = v.findViewById(R.id.grid_month_day);
-
         View v = inflater.inflate(R.layout.fragment_month_day, container, false);
             grid_month = v.findViewById(R.id.grid_month_day);
-            ArrayAdapter<Integer> adapt_grid = new ArrayAdapter<Integer>(getActivity(), R.layout.month, calendarDay);
-            grid_month.setAdapter(adapt_grid);
 
-        //grid_month.setAdapter(adapt_grid);
+            //세로모드
+        if(MainActivity.chk == true){
+                ArrayAdapter<Integer> adapt_grid = new ArrayAdapter<Integer>(getActivity(), R.layout.month, calendarDay);
+                grid_month.setAdapter(adapt_grid);
+                Log.i("test ", "세로");
+            }
+            //가로모드
+            else{
+                ArrayAdapter<Integer> adapt_grid = new ArrayAdapter<Integer>(getActivity(), R.layout.month2, calendarDay);
+                grid_month.setAdapter(adapt_grid);
+            Log.i("test ", "가로");
 
+        }
 
         //첫째 주 시작 요일 맞추기
         cal.set(year, month - 1, 1);
