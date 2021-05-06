@@ -1,22 +1,15 @@
 package com.chr.calendarapp.month;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.chr.calendarapp.R;
-import com.chr.calendarapp.week.WeekDayFragment;
-
-import java.time.Month;
 
 
 public class MonthFragment extends Fragment{
@@ -26,7 +19,6 @@ public class MonthFragment extends Fragment{
 
     int year, month, date;
     int postmp = 1000;
-
 
     public MonthFragment(int year, int month, int date) {
         this.setyear = year;
@@ -49,6 +41,8 @@ public class MonthFragment extends Fragment{
 
         // 먼저 보여질 창(Integer Max값의 중간 값으로 세팅)
         vpPager.setCurrentItem(1000, false);
+
+        //AppBar 년, 월 설정
         vpPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {

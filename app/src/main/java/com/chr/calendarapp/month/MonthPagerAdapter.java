@@ -50,29 +50,23 @@ public class MonthPagerAdapter extends FragmentStateAdapter {
         }
         //3차이났을경우
         else if(currentPosition - position == 3){
-            Log.i("test", " 4 " );
+            Log.i("test", " 3 " );
             thirdNextYearMonth();
         }else if(currentPosition - position == -3){
-            Log.i("test", " 4 " );
+            Log.i("test", " -3 " );
             thirdPrevYearMonth();
         }
 
-//        if(currentPosition > position) {
-//            view = currentPosition -1;
-//            Log.i("test", " view " + view);
-//        }
-
+        //기본적인 월 설정
         if(currentPosition - position == 1){
             setNextYearMonth();
         }else if(currentPosition - position == -1){
             setPrevYearMonth();
         }else{
-            Log.i("test", " 시작 " );
         }
 
         Log.i("test", " month : " + month + " year : " + year + " current " + currentPosition + " position "+ position);
         position = currentPosition;
-
         return new MonthDayFragment(activity, getCalendarDay(year, month), year, month);
     }
 
