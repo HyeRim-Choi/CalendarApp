@@ -3,14 +3,8 @@ package com.chr.calendarapp.week;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.chr.calendarapp.MainActivity;
 import com.chr.calendarapp.R;
-
 import java.util.ArrayList;
 
 
 public class WeekDayFragment extends Fragment {
-
+    // 초기 배경색 세팅이 되어있는 경우
     GridView grid_week_day, grid_week;
     TextView txt_time;
 
@@ -52,7 +43,7 @@ public class WeekDayFragment extends Fragment {
     // 날짜 GridView 클릭했는지 확인(클릭했으면 클릭한 격자 배경색을 화이트로 바꾸기 위해)
     int chkGridWeekDayClick;
 
-    // 캘린더 초기 설정(배경색)
+    // 캘린더 초기 설정
     int chkDate;
 
     Activity activity;
@@ -60,19 +51,17 @@ public class WeekDayFragment extends Fragment {
     public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int setYear, int setMonth, int chkDate) {
         this.weekNum = weekNum;
         this.activity = activity;
-
         this.chkDate = chkDate;
 
         // Activity AppBar의 년도, 월을 수정하기 위해 Activity 호출
         if(setYear!=0){
-            Log.i("WeekDayAppBar", "come in");
 
             // 선택된 항목 위치(position)을 OnSetYearMonthListener 인터페이스를 구현한 액티비티로 전달
-            if (activity instanceof OnSetYearMonthListener)
+            if (activity instanceof OnSetYearMonthListener){
                 ((OnSetYearMonthListener)activity).onSetYearMonth(setYear, setMonth);
-        }
+            }
 
-        Log.i("WeekDayConstructor", "come in");
+        }
 
         dayWeek = new ArrayList<>();
 
@@ -109,8 +98,6 @@ public class WeekDayFragment extends Fragment {
             day = 7 * (cnt + 1);
         }
 
-        Log.i("day", "" + day);
-
         return day;
     }
 
@@ -136,22 +123,12 @@ public class WeekDayFragment extends Fragment {
         }
 
         // week의 격자 칸
-        ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-
-                /* week칸 배경색 초기 설정 */
-                handlerSetBackgroundColor(new Handler(), parent);
-
-                return view;
-            }
-        };
+        ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week);
 
         grid_week.setAdapter(adapt_grid);
 
 
-        // 주 날짜
+        // 날짜 칸
         ArrayAdapter<Integer> adapt_week = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, dayWeek){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -159,10 +136,6 @@ public class WeekDayFragment extends Fragment {
                 View view = super.getView(position, convertView, parent);
                 TextView tv = (TextView) view.findViewById(android.R.id.text1);
                 tv.setTextSize(12);
-
-                /* week_day칸 배경색 초기 설정 */
-                handlerSetBackgroundColor(new Handler(), parent);
-
                 return view;
             }
         };
@@ -200,6 +173,7 @@ public class WeekDayFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int currentPosition, long id) {
                 chkGridWeekClick = 1;
 
+
                 // 날짜 칸을 클릭하고 격자 칸을 클릭했으면 날짜 칸 배경색을 화이트로 바꾸기
                 if(chkGridWeekDayClick == 1){
                     grid_week_day.getChildAt(gridWeekDayPosition).setBackgroundColor(Color.WHITE);
@@ -223,31 +197,7 @@ public class WeekDayFragment extends Fragment {
             }
         });
 
-
         return v;
-    }
-
-    // 초기 배경색 세팅
-    public void handlerSetBackgroundColor(Handler handler, ViewGroup parent){
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(chkDate != -1){
-                    for(int i=0; i< dayWeek.size(); i++){
-                        if(dayWeek.get(i) == chkDate){
-
-                            parent.getChildAt(i).setBackgroundColor(Color.CYAN);
-
-                            break;
-                        }
-                    }
-                }
-
-                else{
-                    parent.getChildAt(0).setBackgroundColor(Color.CYAN);
-                }
-            }
-        }, 1);
     }
 
 

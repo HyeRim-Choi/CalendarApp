@@ -29,17 +29,11 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
     int year, month, date;
 
     public static boolean chk = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-    }
-
-    // 화면 회전이 되어도 동일한 모양을 나타내기 위해 onResume()에 코드 삽입
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         my_toolbar = findViewById(R.id.my_toolbar);
         // toolbar 설정
@@ -56,6 +50,18 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
 
         // toolbar title 설정
         my_toolbar.setTitle(year + "년 " + month + "월");
+
+    }
+
+    // 화면 회전이 되어도 동일한 모양을 나타내기 위해 onResume()에 코드 삽입
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // toolbar title 설정
+        // 화면 회전이 되었을 경우 AppBar가 현재 캘린더를 보는 년도와 월이 유지되도록
+        my_toolbar.setTitle(year + "년 " + month + "월");
+
     }
 
     // 화면 회전
@@ -110,7 +116,10 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
 
     @Override
     public void onSetYearMonth(int setYear, int setMonth) {
-        Log.i("MainActivity", ""+setYear+"년"+setMonth);
+
+        year = setYear;
+        month = setMonth;
+
         // toolbar title 설정
         my_toolbar.setTitle(setYear + "년 " + setMonth + "월");
     }
