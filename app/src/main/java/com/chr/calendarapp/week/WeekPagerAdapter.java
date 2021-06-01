@@ -2,6 +2,8 @@ package com.chr.calendarapp.week;
 
 
 import android.app.Activity;
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -22,7 +24,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     // 첫째 주인지 둘째 주인지 알기 위한 변수
     int cnt, chkCnt;
 
-    // 현재 날짜로 배경색을 세팅하기 위한 변수수
+    // 현재 날짜로 배경색을 세팅하기 위한 변수
    int chkDate;
 
     // 계속 한 쪽으로 슬라이딩하다가 반대쪽으로 슬라이딩했는지 체크
@@ -61,9 +63,13 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     // 각 페이지를 나타내는 프래그먼트 반환
     @Override
     public Fragment createFragment(int currentPosition) {
+        Log.i("WeekPagerAdapter", "currentPosition : " + currentPosition);
+        Log.i("WeekPagerAdapter", "position : " + position);
+        Log.i("WeekPagerAdapter", "cnt : " + cnt);
 
         // 첫 화면에 현재 날짜가 있는 페이지로 세팅
         if(chkDate == 1){
+            Log.i("WeekPagerAdapter", "처음처음");
             cnt = setCalendarPage() - 1;
             chkDate = date;
             return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, chkDate);
@@ -303,6 +309,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         // 이번달 날짜 수
         for (int i = 1 ;i <= day; i++) {
             dayList.add(i);
+            Log.i("WeekPagerAdapter", ""+dayList.get(i));
         }
 
         return dayList;

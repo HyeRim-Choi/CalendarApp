@@ -1,10 +1,12 @@
 package com.chr.calendarapp.week;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import android.os.Handler;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,9 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.chr.calendarapp.R;
+import com.chr.calendarapp.WeekRegisterScheduleActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 
@@ -21,6 +26,7 @@ public class WeekDayFragment extends Fragment {
     // 초기 배경색 세팅이 되어있는 경우
     GridView grid_week_day, grid_week;
     TextView txt_time;
+    FloatingActionButton fab_add;
 
     // GridView의 빈칸
     ArrayList week;
@@ -71,6 +77,7 @@ public class WeekDayFragment extends Fragment {
         // 1,2,3 각각 주의 날짜 ArrayList
         for(int i = 7 * cnt ; i < day ; i++){
             dayWeek.add(dayList.get(i));
+            Log.i("WeekDayFragment", ""+dayWeek.get(i));
         };
 
         // GridView Week 칸 ArrayList
@@ -112,6 +119,7 @@ public class WeekDayFragment extends Fragment {
         grid_week = v.findViewById(R.id.grid_week);
         grid_week_day = v.findViewById(R.id.grid_week_day);
         txt_time = v.findViewById(R.id.txt_time);
+        fab_add = v.findViewById(R.id.fab_add);
 
         // 0 ~ 23 시간
         for(int i = 1; i < 24; i++){
@@ -197,9 +205,41 @@ public class WeekDayFragment extends Fragment {
             }
         });
 
+
+        fab_add.setOnClickListener(click);
+
         return v;
     }
 
+    // 버튼 클릭 이벤트
+    View.OnClickListener click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                // 일정 추가 버튼 클릭 시
+                case R.id.fab_add:
+                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
+                    i.putExtra("year", 2021);
+                    i.putExtra("month", 6);
+                    i.putExtra("day", 1);
+                    i.putExtra("time", 18);
+                    startActivityForResult(i, 1000);
+                    break;
+            }
+        }
+    };
+
+
+    // 일정 등록 액티비티 수행 결과
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != 1000){
+            return;
+        }
+
+    }
 
     // 인터페이스 추가 정의
     public interface OnSetYearMonthListener {
