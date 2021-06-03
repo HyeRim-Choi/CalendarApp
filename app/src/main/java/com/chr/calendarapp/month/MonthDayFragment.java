@@ -1,6 +1,7 @@
 package com.chr.calendarapp.month;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -10,11 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.chr.calendarapp.DB.DBHelper;
+import com.chr.calendarapp.DB.UserContract;
 import com.chr.calendarapp.MainActivity;
 import com.chr.calendarapp.R;
 
@@ -26,6 +32,9 @@ public class MonthDayFragment extends Fragment {
     ArrayList calendarDay;
     Activity activity;
     int year, month ,tmppos;
+    public DBHelper mDbHelper;
+
+    int id;
 
     Calendar cal = Calendar.getInstance();
 
@@ -75,10 +84,16 @@ public class MonthDayFragment extends Fragment {
         grid_month.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getContext(),  year+"."+month+"." + (position+1-startDay+1), Toast.LENGTH_SHORT).show();
+                int tmpDate = (position+1-startDay+1);
+                Toast.makeText(getContext(),  year+"."+month+"." + tmpDate, Toast.LENGTH_SHORT).show();
                 grid_month.getChildAt(position).setBackgroundColor(Color.CYAN);
                 grid_month.getChildAt(tmppos).setBackgroundColor(Color.WHITE);
                 tmppos = position;
+                //일정추가
+                MainActivity.regYear = year;
+                MainActivity.regMonth = month;
+                MainActivity.regDate = tmpDate;
+                MainActivity.regTime = cal.get(Calendar.HOUR);
             }
         });
         return v;
@@ -88,4 +103,6 @@ public class MonthDayFragment extends Fragment {
     public interface OnSetYearMonthListener {
         void onSetYearMonth(int year, int month);
     }
+
+
 }

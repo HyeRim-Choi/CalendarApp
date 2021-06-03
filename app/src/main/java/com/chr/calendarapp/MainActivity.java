@@ -3,9 +3,9 @@ package com.chr.calendarapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
 
     int year, month, date;
 
+    //일정추가
+    public static int regYear, regMonth, regDate, regTime, regId;
     public static boolean chk = true;
 
     @Override
@@ -107,6 +109,19 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
                 // 주간 달력으로 이동
                 WeekFragment weekFragment = new WeekFragment(year, month, date);
                 getSupportFragmentManager().beginTransaction().replace(R.id.calendar, weekFragment).commit();
+                return true;
+
+            case R.id.tmp:
+                // 주간 달력으로 이동
+                //WeekRegisterScheduleActivity rg = new WeekRegisterScheduleActivity();
+                //getSupportParentActivityIntent().replace(R.id.calendar, rg).commit();
+                Intent tmp = new Intent(getApplicationContext(), AddRegisterScheduleActivity.class);
+                tmp.putExtra("year", regYear);
+                tmp.putExtra("month", regMonth);
+                tmp.putExtra("date", regDate);
+                tmp.putExtra("time", regTime);
+                startActivity(tmp);
+                //finish();
                 return true;
 
             default:

@@ -15,14 +15,19 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chr.calendarapp.MainActivity;
 import com.chr.calendarapp.R;
-import com.chr.calendarapp.WeekRegisterScheduleActivity;
+import com.chr.calendarapp.AddRegisterScheduleActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class WeekDayFragment extends Fragment {
+
+    int year, month, date, time;
     // 초기 배경색 세팅이 되어있는 경우
     GridView grid_week_day, grid_week;
     TextView txt_time;
@@ -171,6 +176,7 @@ public class WeekDayFragment extends Fragment {
                 gridWeekDayPosition = currentPosition;
 
                 chkGridWeekClick = 0;
+
             }
         });
 
@@ -202,6 +208,10 @@ public class WeekDayFragment extends Fragment {
                 gridWeekPosition = currentPosition;
 
                 chkGridWeekDayClick = 0;
+
+                //일정추가
+
+
             }
         });
 
@@ -218,7 +228,7 @@ public class WeekDayFragment extends Fragment {
             switch (v.getId()){
                 // 일정 추가 버튼 클릭 시
                 case R.id.fab_add:
-                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
+                    Intent i = new Intent(activity, AddRegisterScheduleActivity.class);
                     i.putExtra("year", 2021);
                     i.putExtra("month", 6);
                     i.putExtra("day", 1);

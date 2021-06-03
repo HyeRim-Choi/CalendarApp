@@ -4,44 +4,52 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.chr.calendarapp.DB.DBHelper;
+import com.chr.calendarapp.DB.UserContract;
+
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
-import net.daum.mf.map.api.MapView;
-
-import com.chr.calendarapp.R;
-
 import net.daum.mf.map.api.MapView;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class WeekRegisterScheduleActivity extends AppCompatActivity {
+public class AddRegisterScheduleActivity extends AppCompatActivity {
+
+    final static String TAG="SQLITEDBTEST";
 
     EditText et_title, et_place, et_memo;
     TimePicker time_start, time_end;
     Button btn_search, btn_save, btn_cancel, btn_delete;
     MapView mapView;
+    int year, month, date, time;
 
     double latitude, longitude;
+
+    public DBHelper mDbHelper;
+
+    EditText id;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_register_schedule);
+
+        mDbHelper = new DBHelper(this);
 
         et_title = findViewById(R.id.et_title);
         et_place = findViewById(R.id.et_place);
@@ -53,19 +61,19 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity {
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_delete = findViewById(R.id.btn_delete);
 
-        mapView = new MapView(this);
-        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        mapViewContainer.addView(mapView);
+       // MapView mapView = new MapView(this);
+       // ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+       // mapViewContainer.addView(mapView);
 
 
 
         Intent intent = getIntent();
-        int year = intent.getIntExtra("year", 0);
-        int month = intent.getIntExtra("month", 0);
-        int day = intent.getIntExtra("day", 0);
-        int time = intent.getIntExtra("time", 0);
+        this.year = intent.getIntExtra("year", 0);
+        this.month = intent.getIntExtra("month", 0);
+        this.date = intent.getIntExtra("date", 0);
+        this.time = intent.getIntExtra("time", 0);
 
-        et_title.setText(year + "년 " + month + "월 " + day + "일 " + time + "시");
+        et_title.setText(year + "년 " + month + "월 " + date + "일 " + time + "시");
         time_start.setHour(time);
         time_start.setMinute(0);
         time_end.setHour(time + 1);
@@ -78,6 +86,8 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity {
         btn_cancel.setOnClickListener(click);
     }
 
+
+
     // 버튼 클릭 이벤트
     View.OnClickListener click = new View.OnClickListener() {
         @Override
@@ -89,7 +99,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity {
 
                     // 검색 창이 비어있다면
                     if(search == null || search.isEmpty()){
-                        Toast.makeText(WeekRegisterScheduleActivity.this, "장소를 검색해주세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddRegisterScheduleActivity.this, "장소를 검색해주세요", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -102,16 +112,16 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity {
                     break;
 
                 case R.id.btn_save:
+                    insertRecord();
                     break;
 
                 case R.id.btn_delete:
+                    //deleteUserBySQL();
                     break;
 
                     // 취소 클릭 시
                 case R.id.btn_cancel:
-                    // 돌아가기
-                    Intent resultIntent = new Intent();
-                    setResult(RESULT_OK, resultIntent);
+
                     finish();
                     break;
             }
@@ -150,4 +160,45 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity {
         // 화면 중앙에 표시 될 위치
         mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude), true);
     }
+
+    private void insertRecord() {
+        String Stringtitle = et_title.getText().toString();
+        String Stringplace = et_place.getText().toString();
+
+        String Stringyear = String.valueOf(year);
+        String Stringmonth = String.valueOf(month);
+        String Stringdate = String.valueOf(date);
+        String Stringtime = String.valueOf(time);
+
+        String Stirngtime_start = String.valueOf(time_start);
+        String Stirngtime_end = String.valueOf(time_end);
+
+        String Stirngtime_latitude = String.valueOf(latitude);
+        String Stirngtime_longitude = String.valueOf(longitude);
+
+        String Stirngtime_memo = et_memo.getText().toString();
+
+
+        mDbHelper.insertUserByMethod(Stringtitle, Stringplace, Stringyear, Stringmonth, Stringdate, Stringtime, Stirngtime_start, Stirngtime_end, Stirngtime_latitude, Stirngtime_longitude, Stirngtime_memo);
+        Log.i("add", "추가완료");
+
+//        long nOfRows = mDbHelper.insertUserByMethod(name.getText().toString(),phone.getText().toString());
+//        if (nOfRows >0)
+//            Toast.makeText(this,nOfRows+" Record Inserted", Toast.LENGTH_SHORT).show();
+//        else
+//            Toast.makeText(this,"No Record Inserted", Toast.LENGTH_SHORT).show();
+    }
+
+    private void deleteRecord() {
+        //EditText _id = (EditText)findViewById(R.id._id);
+
+        //mDbHelper.deleteUserBySQL(_id.getText().toString());
+//        long nOfRows = mDbHelper.deleteUserByMethod(_id.getText().toString());
+//        if (nOfRows >0)
+//            Toast.makeText(this,"Record Deleted", Toast.LENGTH_SHORT).show();
+//        else
+//            Toast.makeText(this,"No Record Deleted", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

@@ -16,6 +16,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,6 +27,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+
+
 }
 
 dependencies {
@@ -42,10 +46,11 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
+    implementation files('libs/libDaumMapAndroid.jar')
+
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
     implementation 'androidx.viewpager:viewpager:1.0.0'
 
-    implementation files('libs/libDaumMapAndroid.jar')
 
 }
