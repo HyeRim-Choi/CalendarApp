@@ -29,7 +29,7 @@ import java.util.Locale;
 
 public class AddRegisterScheduleActivity extends AppCompatActivity {
 
-    final static String TAG="SQLITEDBTEST";
+    final static String TAG = "SQLITEDBTEST";
 
     EditText et_title, et_place, et_memo;
     TimePicker time_start, time_end;
@@ -41,7 +41,7 @@ public class AddRegisterScheduleActivity extends AppCompatActivity {
 
     public DBHelper mDbHelper;
 
-    EditText id;
+    EditText _id;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -61,10 +61,9 @@ public class AddRegisterScheduleActivity extends AppCompatActivity {
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_delete = findViewById(R.id.btn_delete);
 
-       // MapView mapView = new MapView(this);
-       // ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-       // mapViewContainer.addView(mapView);
-
+        // MapView mapView = new MapView(this);
+        // ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+        // mapViewContainer.addView(mapView);
 
 
         Intent intent = getIntent();
@@ -87,18 +86,17 @@ public class AddRegisterScheduleActivity extends AppCompatActivity {
     }
 
 
-
     // 버튼 클릭 이벤트
     View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_search:
                     // 장소 검색
                     String search = et_place.getText().toString();
 
                     // 검색 창이 비어있다면
-                    if(search == null || search.isEmpty()){
+                    if (search == null || search.isEmpty()) {
                         Toast.makeText(AddRegisterScheduleActivity.this, "장소를 검색해주세요", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -119,7 +117,7 @@ public class AddRegisterScheduleActivity extends AppCompatActivity {
                     //deleteUserBySQL();
                     break;
 
-                    // 취소 클릭 시
+                // 취소 클릭 시
                 case R.id.btn_cancel:
 
                     finish();
@@ -130,29 +128,29 @@ public class AddRegisterScheduleActivity extends AppCompatActivity {
 
 
     // 주소 이름을 통해 위도 경도 받기
-    public void getLocation(String search){
+    public void getLocation(String search) {
         try {
             Geocoder geocoder = new Geocoder(this, Locale.KOREA);
-            List<Address> addresses = geocoder.getFromLocationName(search,1);
-            if (addresses.size() >0) {
+            List<Address> addresses = geocoder.getFromLocationName(search, 1);
+            if (addresses.size() > 0) {
                 Address bestResult = (Address) addresses.get(0);
-                latitude =  bestResult.getLatitude();
-                longitude =  bestResult.getLongitude();
+                latitude = bestResult.getLatitude();
+                longitude = bestResult.getLongitude();
             }
         } catch (IOException e) {
-            Log.e(getClass().toString(),"Failed in using Geocoder.", e);
+            Log.e(getClass().toString(), "Failed in using Geocoder.", e);
             return;
         }
     }
 
 
     // 해당 주소에 마커 띄우기
-    public void showMarker(String search, double latitude, double longitude){
+    public void showMarker(String search, double latitude, double longitude) {
         // 마커 띄우기
         MapPOIItem marker = new MapPOIItem();
         marker.setItemName(search);
         marker.setTag(0);
-        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(latitude,longitude));
+        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(latitude, longitude));
         marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본 마커
         marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커 클릭 시
         mapView.addPOIItem(marker);
@@ -162,43 +160,47 @@ public class AddRegisterScheduleActivity extends AppCompatActivity {
     }
 
     private void insertRecord() {
-        String Stringtitle = et_title.getText().toString();
-        String Stringplace = et_place.getText().toString();
 
-        String Stringyear = String.valueOf(year);
-        String Stringmonth = String.valueOf(month);
-        String Stringdate = String.valueOf(date);
-        String Stringtime = String.valueOf(time);
-
-        String Stirngtime_start = String.valueOf(time_start);
-        String Stirngtime_end = String.valueOf(time_end);
-
-        String Stirngtime_latitude = String.valueOf(latitude);
-        String Stirngtime_longitude = String.valueOf(longitude);
-
-        String Stirngtime_memo = et_memo.getText().toString();
-
-
-        mDbHelper.insertUserByMethod(Stringtitle, Stringplace, Stringyear, Stringmonth, Stringdate, Stringtime, Stirngtime_start, Stirngtime_end, Stirngtime_latitude, Stirngtime_longitude, Stirngtime_memo);
-        Log.i("add", "추가완료");
-
-//        long nOfRows = mDbHelper.insertUserByMethod(name.getText().toString(),phone.getText().toString());
-//        if (nOfRows >0)
-//            Toast.makeText(this,nOfRows+" Record Inserted", Toast.LENGTH_SHORT).show();
-//        else
-//            Toast.makeText(this,"No Record Inserted", Toast.LENGTH_SHORT).show();
+        long nOfRows = mDbHelper.insertUserByMethod(
+                et_title.getText().toString(), et_place.getText().toString(),
+                String.valueOf(year), String.valueOf(month), String.valueOf(date), String.valueOf(time),
+                String.valueOf(time_start), String.valueOf(time_end),
+                String.valueOf(latitude), String.valueOf(longitude),
+                et_memo.getText().toString()
+        );
+        if (nOfRows > 0)
+            Toast.makeText(this, nOfRows + " Record Inserted", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "No Record Inserted", Toast.LENGTH_SHORT).show();
     }
 
-    private void deleteRecord() {
-        //EditText _id = (EditText)findViewById(R.id._id);
+    //   private void deleteRecord() {
+    //EditText _id = (EditText)findViewById(R.id._id);
 
-        //mDbHelper.deleteUserBySQL(_id.getText().toString());
+    //mDbHelper.deleteUserBySQL(_id.getText().toString());
 //        long nOfRows = mDbHelper.deleteUserByMethod(_id.getText().toString());
 //        if (nOfRows >0)
 //            Toast.makeText(this,"Record Deleted", Toast.LENGTH_SHORT).show();
 //        else
 //            Toast.makeText(this,"No Record Deleted", Toast.LENGTH_SHORT).show();
-    }
+//    }
+
+//    private void updateRecord() {
+//        //EditText _id = _id;
+//
+//        long nOfRows = mDbHelper.updateUserByMethod(
+//                _id.getText().toString(),
+//                et_title.getText().toString(), et_place.getText().toString(),
+//                String.valueOf(year), String.valueOf(month), String.valueOf(date), String.valueOf(time),
+//                String.valueOf(time_start), String.valueOf(time_end),
+//                String.valueOf(latitude), String.valueOf(longitude),
+//                et_memo.getText().toString()
+//        );
+//        if (nOfRows >0)
+//            Toast.makeText(this,"Record Updated", Toast.LENGTH_SHORT).show();
+//        else
+//            Toast.makeText(this,"No Record Updated", Toast.LENGTH_SHORT).show();
+//    }
 
 
 }
