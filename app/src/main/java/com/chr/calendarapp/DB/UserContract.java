@@ -16,45 +16,32 @@ public final class UserContract {
     public static class Users implements BaseColumns {
         public static final String TABLE_NAME="Users";
 
-        //제목
         public static final String KEY_TITLE = "title";
-
         public static final String KEY_PLACE = "place";
-
 
         public static final String KEY_YEAR = "Year";
         public static final String KEY_MONTH = "Month";
         public static final String KEY_DATE = "Date";
         public static final String KEY_TIME = "Time";
 
-        //시작시간 종료시간
         public static final String KEY_TIME_START = "time_start";
         public static final String KEY_TIME_END = "time_end";
 
-        // 위도경도
         public static final String KEY_LATITUDE = "latitude";
         public static final String KEY_LONGITUDE = "longitude";
 
-        //메모
         public static final String KEY_MEMO = "memo";
-
-
-
-
 
         public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY" + COMMA_SEP +
 
                 KEY_TITLE + TEXT_TYPE + COMMA_SEP +
-
                 KEY_PLACE + TEXT_TYPE + COMMA_SEP +
-
 
                 KEY_YEAR + TEXT_TYPE + COMMA_SEP +
                 KEY_MONTH + TEXT_TYPE + COMMA_SEP +
                 KEY_DATE + TEXT_TYPE + COMMA_SEP +
                 KEY_TIME + TEXT_TYPE + COMMA_SEP +
-
 
                 KEY_TIME_START + TEXT_TYPE + COMMA_SEP +
                 KEY_TIME_END + TEXT_TYPE + COMMA_SEP +
