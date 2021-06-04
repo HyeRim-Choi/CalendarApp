@@ -67,6 +67,9 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         Log.i("WeekPagerAdapter", "position : " + position);
         Log.i("WeekPagerAdapter", "cnt : " + cnt);
 
+        setYear = year;
+        setMonth = month;
+
         // 첫 화면에 현재 날짜가 있는 페이지로 세팅
         if(chkDate == 1){
             Log.i("WeekPagerAdapter", "처음처음");
@@ -75,8 +78,6 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
             return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, chkDate);
         }
 
-        setYear = 0;
-        setMonth = 0;
 
         // 현재 position이 전 position보다 작다면
         if(currentPosition < position){
@@ -294,6 +295,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         // 날짜 데이터
         ArrayList dayList = new ArrayList();
 
+
         //첫째 주 시작 요일 맞추기
         cal.set(year, month - 1, 1);
         int startDay = cal.get(Calendar.DAY_OF_WEEK);
@@ -309,7 +311,6 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         // 이번달 날짜 수
         for (int i = 1 ;i <= day; i++) {
             dayList.add(i);
-            Log.i("WeekPagerAdapter", ""+dayList.get(i));
         }
 
         return dayList;

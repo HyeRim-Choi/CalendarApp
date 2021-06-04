@@ -23,6 +23,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+<<<<<<< Updated upstream
+=======
+import java.util.HashMap;
+import java.util.Map;
+>>>>>>> Stashed changes
 
 
 public class WeekDayFragment extends Fragment {
@@ -37,6 +42,8 @@ public class WeekDayFragment extends Fragment {
     ArrayList week;
     // 날짜 ArrayList
     ArrayList<Integer> dayWeek;
+
+    int year, month, day;
 
     // 월의 주 개수 받기
     int weekNum;
@@ -63,15 +70,16 @@ public class WeekDayFragment extends Fragment {
         this.weekNum = weekNum;
         this.activity = activity;
         this.chkDate = chkDate;
+        year = setYear;
+        month = setMonth;
+
+        Log.i("weekDayFrag", "m : " + setMonth);
+        Log.i("weekDayFrag", "cnt : " + cnt);
 
         // Activity AppBar의 년도, 월을 수정하기 위해 Activity 호출
-        if(setYear!=0){
-
-            // 선택된 항목 위치(position)을 OnSetYearMonthListener 인터페이스를 구현한 액티비티로 전달
-            if (activity instanceof OnSetYearMonthListener){
-                ((OnSetYearMonthListener)activity).onSetYearMonth(setYear, setMonth);
-            }
-
+        // 선택된 항목 위치(position)을 OnSetYearMonthListener 인터페이스를 구현한 액티비티로 전달
+        if (activity instanceof OnSetYearMonthListener){
+            ((OnSetYearMonthListener)activity).onSetYearMonth(setYear, setMonth);
         }
 
         dayWeek = new ArrayList<>();
@@ -82,13 +90,17 @@ public class WeekDayFragment extends Fragment {
         // 1,2,3 각각 주의 날짜 ArrayList
         for(int i = 7 * cnt ; i < day ; i++){
             dayWeek.add(dayList.get(i));
-            Log.i("WeekDayFragment", ""+dayWeek.get(i));
-        };
+        }
 
         // GridView Week 칸 ArrayList
         week = new ArrayList();
-        for(int i=0;i<23*7;i++){
-            week.add("");
+        // 시간( 0 ~ 23 )
+        for(int i = 0; i <= 23; i++){
+            // 요일(일 ~ 토)
+            for(int j = 0; j < 7; j++){
+                // DB 에서 Title 불러오기
+                week.add("");
+            }
         }
 
     }
@@ -228,11 +240,19 @@ public class WeekDayFragment extends Fragment {
             switch (v.getId()){
                 // 일정 추가 버튼 클릭 시
                 case R.id.fab_add:
+<<<<<<< Updated upstream
                     Intent i = new Intent(activity, AddRegisterScheduleActivity.class);
                     i.putExtra("year", 2021);
                     i.putExtra("month", 6);
                     i.putExtra("day", 1);
                     i.putExtra("time", 18);
+=======
+                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
+                    i.putExtra("year", year);
+                    i.putExtra("month", month);
+                    i.putExtra("day", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
+                    i.putExtra("time", gridWeekPosition / 7);
+>>>>>>> Stashed changes
                     startActivityForResult(i, 1000);
                     break;
             }
