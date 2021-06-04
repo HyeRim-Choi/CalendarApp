@@ -84,4 +84,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+    public Cursor getAllUsersBySQL() {
+        String sql = "Select * FROM " + UserContract.Users.TABLE_NAME;
+        return getReadableDatabase().rawQuery(sql,null);
+    }
 }

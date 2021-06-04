@@ -5,17 +5,23 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SimpleCursorAdapter;
 
 
+import com.chr.calendarapp.DB.DBHelper;
+import com.chr.calendarapp.DB.UserContract;
 import com.chr.calendarapp.month.MonthDayFragment;
 import com.chr.calendarapp.month.MonthFragment;
 import com.chr.calendarapp.week.WeekDayFragment;
 import com.chr.calendarapp.week.WeekFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements WeekDayFragment.OnSetYearMonthListener , MonthDayFragment.OnSetYearMonthListener {
@@ -28,9 +34,14 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
 
     int year, month, date;
 
-    //일정추가
-    public static int regYear, regMonth, regDate, regTime, regId;
     public static boolean chk = true;
+
+    //일정추가
+    public static int regYear, regMonth, regDate, regTime;
+    public static String regId;
+    public static int Maxid;
+    static private DBHelper mDbHelper;
+    static public ArrayList db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +64,11 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
         // toolbar title 설정
         my_toolbar.setTitle(year + "년 " + month + "월");
 
+        mDbHelper = new DBHelper(this);
+
+
     }
+
 
     // 화면 회전이 되어도 동일한 모양을 나타내기 위해 onResume()에 코드 삽입
     @Override
@@ -138,4 +153,35 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
         // toolbar title 설정
         my_toolbar.setTitle(setYear + "년 " + setMonth + "월");
     }
+
+    static public void viewAllToTextView() {
+        //TextView result = (TextView)findViewById(R.id.result);
+
+        Cursor cursor = mDbHelper.getAllUsersBySQL();
+
+        db = new ArrayList();
+        while (cursor.moveToNext()) {
+
+            for(int i=0; i<11; i++) {
+                db.add(cursor.getString(i));
+            }
+        }
+        Log.i("add", " 00 " + db.get(0));
+        Log.i("add", " 1 " + db.get(1));
+        Log.i("add", " 2 " + db.get(2));
+        Log.i("add", " 3 " + db.get(3));
+        Log.i("add", " 4 " + db.get(4));
+        Log.i("add", " 5 " + db.get(5));
+        Log.i("add", " 6 " + db.get(6));
+        Log.i("add", " 7 " + db.get(7));
+        Log.i("add", " 8 " + db.get(8));
+        Log.i("add", " 9 " + db.get(9));
+        Log.i("add", " 10 " + db.get(10));
+        Log.i("add", " 11 " + db.get(11));
+        Log.i("add", " 12 " + db.get(12));
+        Log.i("add", " 13 " + db.get(13));
+
+    }
+
+
 }

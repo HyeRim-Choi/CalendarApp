@@ -34,7 +34,6 @@ public class MonthDayFragment extends Fragment {
     int year, month ,tmppos;
     public DBHelper mDbHelper;
 
-    int id;
 
     Calendar cal = Calendar.getInstance();
 
@@ -43,6 +42,7 @@ public class MonthDayFragment extends Fragment {
         this.calendarDay = calendarDay;
         this.year = year;
         this.month = month;
+
     }
 
     public MonthDayFragment() {
@@ -51,6 +51,44 @@ public class MonthDayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        MainActivity.viewAllToTextView();
+
+
+        int chkdate = 0;
+        //일정표시
+        if(MainActivity.db.size() > 0) {
+            for(int i=0; i<7; i++)
+                calendarDay.remove(" ");
+            for (int i = 0; i < 3; i++) { //tableraw 개수
+                if (year == Integer.parseInt(MainActivity.db.get((3 + (i*12))).toString())) {
+                    if (month == Integer.parseInt(MainActivity.db.get((4 + (i * 12))).toString())) {
+                        for (int date = 0; date < calendarDay.size(); date++) {
+                            int a = Integer.parseInt(calendarDay.get(date).toString());
+
+                            if (a == Integer.parseInt(MainActivity.db.get((5 + (i * 12))).toString())) {
+                                calendarDay.set(date, date + 1 + "\n date");
+                                Log.i("add", "xxxxxxx "+ calendarDay.size());
+                                Log.i("add", "aaaaa1 "+ Integer.parseInt(MainActivity.db.get((5 + (i * 12))).toString()));
+
+                            }
+                            Log.i("add", "aaaaa2 "+ Integer.parseInt(MainActivity.db.get(17).toString()));
+                        }
+                    }
+                }
+
+            }
+        }
+
+        cal.set(year, month - 1, 1);
+        int startDay = cal.get(Calendar.DAY_OF_WEEK);
+
+        if (startDay != 1) {
+            for (int i = 0; i < startDay - 1; i++) {
+                calendarDay.add(0, "");
+            }
+        }
+
         //6x7칸 맞추기
         while(true) {
             if (calendarDay.size() < 42) {
@@ -60,13 +98,16 @@ public class MonthDayFragment extends Fragment {
             }
         }
 
+
+
         View v = inflater.inflate(R.layout.fragment_month_day, container, false);
             grid_month = v.findViewById(R.id.grid_month_day);
+
 
             //세로모드
         if(MainActivity.chk == true){
                 ArrayAdapter<Integer> adapt_grid = new ArrayAdapter<Integer>(getActivity(), R.layout.month, calendarDay);
-                grid_month.setAdapter(adapt_grid);
+            grid_month.setAdapter(adapt_grid);
                 Log.i("test ", "세로");
             }
             //가로모드
@@ -77,9 +118,6 @@ public class MonthDayFragment extends Fragment {
 
         }
 
-        //첫째 주 시작 요일 맞추기
-        cal.set(year, month - 1, 1);
-        int startDay = cal.get(Calendar.DAY_OF_WEEK);
         //날짜 선택시 Toast년월일 출력과 선택 색칠
         grid_month.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
