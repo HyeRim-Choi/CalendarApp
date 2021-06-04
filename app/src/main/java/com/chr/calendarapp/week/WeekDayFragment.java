@@ -22,17 +22,12 @@ import com.chr.calendarapp.AddRegisterScheduleActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-<<<<<<< Updated upstream
-=======
-import java.util.HashMap;
-import java.util.Map;
->>>>>>> Stashed changes
+
 
 
 public class WeekDayFragment extends Fragment {
 
-    int year, month, date, time;
+    int year, month, day;
     // 초기 배경색 세팅이 되어있는 경우
     GridView grid_week_day, grid_week;
     TextView txt_time;
@@ -42,8 +37,6 @@ public class WeekDayFragment extends Fragment {
     ArrayList week;
     // 날짜 ArrayList
     ArrayList<Integer> dayWeek;
-
-    int year, month, day;
 
     // 월의 주 개수 받기
     int weekNum;
@@ -240,19 +233,11 @@ public class WeekDayFragment extends Fragment {
             switch (v.getId()){
                 // 일정 추가 버튼 클릭 시
                 case R.id.fab_add:
-<<<<<<< Updated upstream
                     Intent i = new Intent(activity, AddRegisterScheduleActivity.class);
-                    i.putExtra("year", 2021);
-                    i.putExtra("month", 6);
-                    i.putExtra("day", 1);
-                    i.putExtra("time", 18);
-=======
-                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
                     i.putExtra("year", year);
                     i.putExtra("month", month);
                     i.putExtra("day", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
                     i.putExtra("time", gridWeekPosition / 7);
->>>>>>> Stashed changes
                     startActivityForResult(i, 1000);
                     break;
             }
