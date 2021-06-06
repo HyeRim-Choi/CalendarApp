@@ -1,11 +1,18 @@
 package com.chr.calendarapp.week;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Parcelable;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,18 +26,23 @@ import android.widget.Toast;
 import com.chr.calendarapp.MainActivity;
 import com.chr.calendarapp.R;
 import com.chr.calendarapp.AddRegisterScheduleActivity;
+import com.chr.calendarapp.database.ScheduleDatabaseManager;
+import com.chr.calendarapp.database.ScheduleVO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 
 public class WeekDayFragment extends Fragment {
 
-    int year, month, day;
+    int year, month;
+
     // 초기 배경색 세팅이 되어있는 경우
     GridView grid_week_day, grid_week;
     TextView txt_time;
+    // Floating Button 띄우기
     FloatingActionButton fab_add;
 
     // GridView의 빈칸
@@ -59,20 +71,24 @@ public class WeekDayFragment extends Fragment {
 
     Activity activity;
 
-    public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int setYear, int setMonth, int chkDate) {
+    View v;
+
+    // DB
+    ScheduleDatabaseManager scheduleDatabaseManager;
+
+    public WeekDayFragment(Activity activity, ArrayList<Integer> dayList, int weekNum, int cnt, int year, int month, int setYear, int setMonth, int chkDate) {
         this.weekNum = weekNum;
         this.activity = activity;
         this.chkDate = chkDate;
-        year = setYear;
-        month = setMonth;
-
-        Log.i("weekDayFrag", "m : " + setMonth);
-        Log.i("weekDayFrag", "cnt : " + cnt);
+        this.year = year;
+        this.month = month;
 
         // Activity AppBar의 년도, 월을 수정하기 위해 Activity 호출
-        // 선택된 항목 위치(position)을 OnSetYearMonthListener 인터페이스를 구현한 액티비티로 전달
-        if (activity instanceof OnSetYearMonthListener){
-            ((OnSetYearMonthListener)activity).onSetYearMonth(setYear, setMonth);
+        if(setYear != 0){
+            // 선택된 항목 위치(position)을 OnSetYearMonthListener 인터페이스를 구현한 액티비티로 전달
+            if (activity instanceof OnSetYearMonthListener){
+                ((OnSetYearMonthListener)activity).onSetYearMonth(setYear, setMonth);
+            }
         }
 
         dayWeek = new ArrayList<>();
@@ -83,17 +99,6 @@ public class WeekDayFragment extends Fragment {
         // 1,2,3 각각 주의 날짜 ArrayList
         for(int i = 7 * cnt ; i < day ; i++){
             dayWeek.add(dayList.get(i));
-        }
-
-        // GridView Week 칸 ArrayList
-        week = new ArrayList();
-        // 시간( 0 ~ 23 )
-        for(int i = 0; i <= 23; i++){
-            // 요일(일 ~ 토)
-            for(int j = 0; j < 7; j++){
-                // DB 에서 Title 불러오기
-                week.add("");
-            }
         }
 
     }
@@ -124,27 +129,13 @@ public class WeekDayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_week_day, container, false);
+
+        v = inflater.inflate(R.layout.fragment_week_day, container, false);
 
         grid_week = v.findViewById(R.id.grid_week);
         grid_week_day = v.findViewById(R.id.grid_week_day);
         txt_time = v.findViewById(R.id.txt_time);
         fab_add = v.findViewById(R.id.fab_add);
-
-        // 0 ~ 23 시간
-        for(int i = 1; i < 24; i++){
-            txt_time.append(i+"");
-
-            if(i != 23){
-                 txt_time.append("\n\n\n");
-            }
-        }
-
-        // week의 격자 칸
-        ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week);
-
-        grid_week.setAdapter(adapt_grid);
-
 
         // 날짜 칸
         ArrayAdapter<Integer> adapt_week = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_list_item_1, dayWeek){
@@ -159,6 +150,42 @@ public class WeekDayFragment extends Fragment {
         };
 
         grid_week_day.setAdapter(adapt_week);
+
+
+        // 0 ~ 23 시간
+        for(int i = 1; i < 24; i++){
+            txt_time.append(i+"");
+
+            if(i != 23){
+                txt_time.append("\n\n\n");
+            }
+        }
+
+        // GridView Week 칸 ArrayList
+        week = new ArrayList();
+         // 시간( 0 ~ 23 )
+        for(int i = 0; i <= 23; i++){
+            // 요일(일 ~ 토)
+            for(int j = 0; j < 7; j++){
+                // DB 에서 Title 불러오기
+                selectSchedule(year, month, j, ""+i);
+            }
+        }
+
+        // week의 격자 칸
+        ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // ListView Custom
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                tv.setTextSize(7);
+                return view;
+            }
+        };
+
+        grid_week.setAdapter(adapt_grid);
+
 
 
         // 날짜 클릭 시
@@ -192,7 +219,6 @@ public class WeekDayFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int currentPosition, long id) {
                 chkGridWeekClick = 1;
 
-
                 // 날짜 칸을 클릭하고 격자 칸을 클릭했으면 날짜 칸 배경색을 화이트로 바꾸기
                 if(chkGridWeekDayClick == 1){
                     grid_week_day.getChildAt(gridWeekDayPosition).setBackgroundColor(Color.WHITE);
@@ -214,7 +240,20 @@ public class WeekDayFragment extends Fragment {
 
                 chkGridWeekDayClick = 0;
 
-                //일정추가
+                // title을 통해 일정 데이터를 VO에 저장하여 상세일정 창으로 보내기
+                if(!grid_week.getItemAtPosition(currentPosition).equals("")){
+                    // db select 하기
+                    ScheduleVO vo = selectSchedule(year, month, gridWeekPosition % 7, ""+(gridWeekPosition / 7));
+
+                    // vo를 가지고 상세일정 창으로 이동하기
+                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
+                    i.putExtra("year", year);
+                    i.putExtra("month", month);
+                    i.putExtra("date", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
+                    i.putExtra("time", gridWeekPosition / 7);
+                    i.putExtra("schedule", vo);
+                    startActivityForResult(i, 1000);
+                }
 
 
             }
@@ -233,11 +272,12 @@ public class WeekDayFragment extends Fragment {
             switch (v.getId()){
                 // 일정 추가 버튼 클릭 시
                 case R.id.fab_add:
-                    Intent i = new Intent(activity, AddRegisterScheduleActivity.class);
+                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
                     i.putExtra("year", year);
                     i.putExtra("month", month);
-                    i.putExtra("day", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
+                    i.putExtra("date", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
                     i.putExtra("time", gridWeekPosition / 7);
+                    i.putExtra("schedule", (Serializable) null);
                     startActivityForResult(i, 1000);
                     break;
             }
@@ -245,14 +285,121 @@ public class WeekDayFragment extends Fragment {
     };
 
 
+    // select
+    public ScheduleVO selectSchedule(int year, int month, int date, String startTime)
+    {
+        scheduleDatabaseManager = ScheduleDatabaseManager.getInstance(activity);
+
+        String day = "";
+
+        try {
+            // 날짜 gridView에서 인덱스에 맞는 날짜 가져오기
+            day = (grid_week_day.getItemAtPosition(date)).toString();
+
+        }
+        catch (Exception e){
+            // 날짜가 존재하지 않으면 " "로 초기화
+            day = " ";
+            e.printStackTrace();
+        }
+        finally {
+            // db query에 'date= ' 이렇게 빈 값으로 들어가는 것을 방지하기 위해 day를 0으로 세팅
+            if(day.equals(" ") || day == " " || day == null){
+                day = 0 + "";
+            }
+        }
+
+        // "09" format으로 세팅
+        if(startTime.length() == 1){
+            startTime = "0" + startTime;
+        }
+
+
+        // SELECT title FROM schedule WHERE year=2021 and month=6 and date=3 and time_start like '06%'
+        // select
+        String[] columns = new String[] {"title", "time_start", "time_end", "place", "latitude", "longitude", "memo"};
+        // where
+        String selection = "year=" + year + " and month=" + month + " and date=" + day  + " and time_start like '" + startTime + "%'";
+        Log.i("WeekDayFragment1", day);
+        Log.i("WeekDayFragment1", selection);
+
+        Cursor cursor = scheduleDatabaseManager.query(columns, selection, null,null,null,null);
+        Cursor cursorChk = scheduleDatabaseManager.query(columns, selection, null,null,null,null);
+
+        // DB에서 가져 온 데이터들 저장하기
+        ScheduleVO vo = new ScheduleVO();
+
+        if(cursor != null)
+        {
+
+            // title이 존재하지 않으면 격자 grid에 빈 칸 넣기
+            if(!cursorChk.moveToNext()){
+                week.add("");
+            }
+            else{
+                while (cursor.moveToNext())
+                {
+
+                    // title이 존재하면 격자 grid에 title 넣기
+                    week.add(cursor.getString(0) + "\n"); // title
+
+                    vo.setTitle(cursor.getString(0)); // title
+                    vo.setTime_start(cursor.getString(1)); // time_start
+                    vo.setTime_end(cursor.getString(2)); // time_end
+                    vo.setPlace(cursor.getString(3)); // place
+                    vo.setLatitude(cursor.getDouble(4)); // latitude
+                    vo.setLongitude(cursor.getDouble(5)); // longitude
+                    vo.setMemo(cursor.getString(6)); // memo
+
+                }
+            }
+
+        }
+
+        cursor.close(); // cursor 닫기
+
+        return vo;
+
+    }
+
+
     // 일정 등록 액티비티 수행 결과
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.i("Check", "onActivityResult");
+
         if (requestCode != 1000){
             return;
         }
+
+
+        /* 수정 된 grid 칸 업데이트 */
+        // GridView Week 칸 ArrayList
+        week = new ArrayList();
+        // 시간( 0 ~ 23 )
+        for(int i = 0; i <= 23; i++){
+            // 요일(일 ~ 토)
+            for(int j = 0; j < 7; j++){
+                // DB 에서 Title 불러오기
+                selectSchedule(year, month, j, ""+i);
+            }
+        }
+
+        // week의 격자 칸
+        ArrayAdapter<String> adapt_grid = new ArrayAdapter<String>(getActivity(), R.layout.week, week){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // ListView Custom
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                tv.setTextSize(7);
+                return view;
+            }
+        };
+
+        grid_week.setAdapter(adapt_grid);
 
     }
 

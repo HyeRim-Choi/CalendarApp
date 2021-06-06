@@ -67,16 +67,16 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         Log.i("WeekPagerAdapter", "position : " + position);
         Log.i("WeekPagerAdapter", "cnt : " + cnt);
 
-        setYear = year;
-        setMonth = month;
-
         // 첫 화면에 현재 날짜가 있는 페이지로 세팅
         if(chkDate == 1){
             Log.i("WeekPagerAdapter", "처음처음");
             cnt = setCalendarPage() - 1;
             chkDate = date;
-            return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, chkDate);
+            return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, year, month, setYear, setMonth, chkDate);
         }
+
+        setYear = 0;
+        setMonth = 0;
 
 
         // 현재 position이 전 position보다 작다면
@@ -210,7 +210,7 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
         chkPosition2 = 0;
 
 
-        return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, setYear, setMonth, -1);
+        return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, year, month, setYear, setMonth, -1);
 
     }
 
