@@ -20,7 +20,9 @@ import com.chr.calendarapp.month.MonthDayFragment;
 import com.chr.calendarapp.month.MonthFragment;
 import com.chr.calendarapp.week.WeekDayFragment;
 import com.chr.calendarapp.week.WeekFragment;
+import com.chr.calendarapp.week.WeekRegisterScheduleActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -130,13 +132,23 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
                 // 주간 달력으로 이동
                 //WeekRegisterScheduleActivity rg = new WeekRegisterScheduleActivity();
                 //getSupportParentActivityIntent().replace(R.id.calendar, rg).commit();
-                Intent tmp = new Intent(getApplicationContext(), AddRegisterScheduleActivity.class);
+                /*Intent tmp = new Intent(getApplicationContext(), AddRegisterScheduleActivity.class);
                 tmp.putExtra("year", regYear);
                 tmp.putExtra("month", regMonth);
                 tmp.putExtra("date", regDate);
                 tmp.putExtra("time", regTime);
-                startActivity(tmp);
+                startActivity(tmp);*/
                 //finish();
+
+                // 일정 추가 창으로 이동
+                Intent intent = new Intent(getApplicationContext(), WeekRegisterScheduleActivity.class);
+                intent.putExtra("year", cal.get(Calendar.YEAR));
+                intent.putExtra("month", cal.get(Calendar.MONTH)+1);
+                intent.putExtra("date", cal.get(Calendar.DATE));
+                intent.putExtra("time", cal.get(Calendar.HOUR_OF_DAY));
+                intent.putExtra("schedule", (Serializable) null);
+                startActivity(intent);
+
                 return true;
 
             default:
