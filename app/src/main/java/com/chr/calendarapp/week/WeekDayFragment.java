@@ -254,8 +254,6 @@ public class WeekDayFragment extends Fragment {
                     i.putExtra("schedule", vo);
                     startActivityForResult(i, 1000);
                 }
-
-
             }
         });
 
@@ -367,8 +365,6 @@ public class WeekDayFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        Log.i("Check", "onActivityResult");
 
         if (requestCode != 1000){
             return;

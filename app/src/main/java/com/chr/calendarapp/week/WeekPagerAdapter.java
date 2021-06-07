@@ -63,13 +63,9 @@ public class WeekPagerAdapter extends FragmentStateAdapter {
     // 각 페이지를 나타내는 프래그먼트 반환
     @Override
     public Fragment createFragment(int currentPosition) {
-        Log.i("WeekPagerAdapter", "currentPosition : " + currentPosition);
-        Log.i("WeekPagerAdapter", "position : " + position);
-        Log.i("WeekPagerAdapter", "cnt : " + cnt);
 
         // 첫 화면에 현재 날짜가 있는 페이지로 세팅
         if(chkDate == 1){
-            Log.i("WeekPagerAdapter", "처음처음");
             cnt = setCalendarPage() - 1;
             chkDate = date;
             return new WeekDayFragment(activity, getCalendarDay(year, month), weekNum, cnt, year, month, setYear, setMonth, chkDate);
