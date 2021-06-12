@@ -176,6 +176,8 @@ public class MonthDayFragment extends Fragment {
                     i.putExtra("year", year);
                     i.putExtra("month", month);
                     i.putExtra("date", date);
+                    i.putExtra("longitude", "");
+                    i.putExtra("latitude", "");
                     i.putExtra("time", cal.get(Calendar.HOUR));
                     i.putExtra("schedule", (Serializable) null);
                     startActivityForResult(i, 1000);
@@ -227,13 +229,13 @@ public class MonthDayFragment extends Fragment {
                         // grid에 date + title넣기
                         calendarDay.set(date1 , calendarDay.get(date1) + "\n" + subTitle); // title
 
-                        // schedule에
+                        // vo set
                         vo.setTitle(cursor.getString(0)); // title
                         vo.setTime_start(cursor.getString(1)); // time_start
                         vo.setTime_end(cursor.getString(2)); // time_end
                         vo.setPlace(cursor.getString(3)); // place
-                        //vo.setLatitude(cursor.getDouble(4)); // latitude
-                        //vo.setLongitude(cursor.getDouble(5)); // longitude
+                        vo.setLatitude(cursor.getDouble(4)); // latitude
+                        vo.setLongitude(cursor.getDouble(5)); // longitude
                         vo.setMemo(cursor.getString(6)); // memo
                     }
                 }

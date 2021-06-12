@@ -31,6 +31,14 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="30d780f95aeb111d7c5a6409a01f1cc6"/>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB3ryp0Ek-qZhbbfoz7HI3R31wZ1ix6cbk" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
     </application>
 
 </manifest>
