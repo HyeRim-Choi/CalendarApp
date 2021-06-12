@@ -16,6 +16,7 @@
         android:theme="@style/Theme.CalendarApp">
         <activity android:name=".DB.tmp"></activity>
         <activity android:name=".month.MonthRegisterScheduleActivity"></activity>
+        <activity android:name=".week.WeekRegisterScheduleActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize">

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -68,9 +69,9 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
         btn_delete = findViewById(R.id.btn_delete);
 
         // 맵뷰
-//        mapView = new MapView(this);
-//        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-//        mapViewContainer.addView(mapView);
+        mapView = new MapView(this);
+        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+        mapViewContainer.addView(mapView);
 
         // 데이터 받아오기
         Intent intent = getIntent();
@@ -139,7 +140,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
                     getLocation(search);
 
                     // 마커 띄우기
-                    //showMarker(search, latitude, longitude)
+                    showMarker(search, latitude, longitude);
                     break;
 
                     // 저장
