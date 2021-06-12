@@ -16,10 +16,4 @@
     <string name="month">월</string>
     <string name="week">주</string>
 
-
-    <string-array name = "LAN">
-        <item>"Android"</item>
-        <item>"Java"</item>
-    </string-array>
-
 </resources>
