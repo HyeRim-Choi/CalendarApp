@@ -2,7 +2,6 @@ package com.chr.calendarapp.month;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,30 +31,28 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MonthDayFragment extends Fragment {
-    public GridView grid_month, x;
+    public GridView grid_month;
     ArrayList calendarDay;
-    ArrayList resultcalendarDay;
 
     Activity activity;
     int year, month, date, tmppos;
 
-
+    // 일정추가버튼
     FloatingActionButton fab_add;
 
     Calendar cal = Calendar.getInstance();
 
+    // database
     ScheduleDatabaseManager scheduleDatabaseManager;
 
+    // dialog목록
     ArrayList<String> items = new ArrayList<>();
-
 
     public MonthDayFragment(Activity activity, ArrayList calendarDay, int year, int month) {
         this.activity = activity;
         this.calendarDay = calendarDay;
-        this.resultcalendarDay = calendarDay;
         this.year = year;
         this.month = month;
-
     }
 
     public MonthDayFragment() {
@@ -64,10 +61,8 @@ public class MonthDayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // 캘린더 시간맞춤
         cal.set(year, month - 1, 1);
-
-
-
 
         //6x7칸 맞추기
         while (true) {
@@ -79,23 +74,18 @@ public class MonthDayFragment extends Fragment {
         }
         Log.i("qwer1", calendarDay + "calandar");
 
-        //calendarDay = new ArrayList();
 
-        //6x7칸 맞추기
-
+        // 6x7칸 맞추기
         for(int j = 0; j < 42; j++){
             // DB 에서 Title 불러오기
             selectSchedule(year, month, j);
         }
-
-
 
         View v = inflater.inflate(R.layout.fragment_month_day, container, false);
         grid_month = v.findViewById(R.id.grid_month_day);
 
         // 일정추가버튼
         fab_add = v.findViewById(R.id.fab_add);
-
 
         //세로모드
         if (MainActivity.chk == true) {
@@ -112,7 +102,6 @@ public class MonthDayFragment extends Fragment {
 
         int startDay = cal.get(Calendar.DAY_OF_WEEK);
 
-
         //날짜 선택시 Toast년월일 출력과 선택 색칠
         grid_month.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -125,78 +114,58 @@ public class MonthDayFragment extends Fragment {
 
                 //선택한 날짜
                 date = tmpDate;
-                Log.i("qwerㅋ", tmpDate + " []");
-
-//                if (calendarDay.get(position).toString().length() > 3) {
-//                    // db select 하기
-//                    ScheduleVO vo = selectSchedule(year, month, date);
-//                    Log.i("qwerㅋ", date + "불러옴");
-//
-//                    // vo를 가지고 상세일정 창으로 이동하기
-//                    Intent i = new Intent(activity, AddRegisterScheduleActivity.class);
-//                    i.putExtra("year", year);
-//                    i.putExtra("month", month);
-//                    i.putExtra("date", date);
-//                    i.putExtra("time", 7);
-//                    i.putExtra("schedule", (Serializable) vo);
-//                    startActivityForResult(i, 1000);
-//                }
-
                 String[] columns = new String[]{"title", "time_start", "time_end", "place", "latitude", "longitude", "memo"};
-                // where
+
+                // where문
                 String selection = "year=" + year + " and month=" + month + " and date=" + date;
 
                 Cursor cursor = scheduleDatabaseManager.query(columns, selection, null, null, null, null);
 
+                // dialog에 title추가
                 items.clear();
                 while (cursor.moveToNext()) {
                     items.add(cursor.getString(0));
                 }
 
-
-                ////
+                // 일정추가되있으면 dialog 출력
                 if (calendarDay.get(position).toString().length() > 3) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle("리스트 추가 예제");
 
+                    // dialog title year.month.date출력
+                    builder.setTitle(year + "." + month + "." + date + "일");
                     CharSequence[] items1 = items.toArray(new String[items.size()]);
 
                     builder.setItems(items1, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int pos) {
-                            //items = calendarDay;
+
+                            // dialog에 타이틀 목록 출력
                             Toast.makeText(activity.getApplicationContext(), items1[pos], Toast.LENGTH_LONG).show();
 
+                            // vo를 가지고 상세일정 창으로 이동하기
                             ScheduleVO vo = selectSchedule(year, month, date);
-                            Log.i("qwerㅋ", date + "불러옴");
-
-                              // vo를 가지고 상세일정 창으로 이동하기
-                          Intent i = new Intent(activity, MonthRegisterScheduleActivity.class);
-                          i.putExtra("year", year);
-                          i.putExtra("month", month);
-                          i.putExtra("date", date);
-                          //i.putExtra("time", 7);
-                          i.putExtra("schedule", (Serializable) vo);
-                          startActivityForResult(i, 1000);
+                            Intent i = new Intent(activity, MonthRegisterScheduleActivity.class);
+                            i.putExtra("year", year);
+                            i.putExtra("month", month);
+                            i.putExtra("date", date);
+                            i.putExtra("time", cal.get(Calendar.HOUR));
+                            i.putExtra("schedule", (Serializable) vo);
+                            startActivityForResult(i, 1000);
                         }
                     });
 
+                    // dialog 출력
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 }
-
             }
-                ////
-
-
         });
 
         fab_add.setOnClickListener(click);
-
         return v;
     }
 
-    //일정추가버튼누를시
+    // 일정추가버튼누를시
     View.OnClickListener click = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -216,48 +185,16 @@ public class MonthDayFragment extends Fragment {
     };
 
 
-    // 인터페이스 추가 정의
-    public interface OnSetYearMonthListener {
-        void onSetYearMonth(int year, int month);
-    }
-
-
-    // select
     public ScheduleVO selectSchedule(int year, int month, int date) {
         scheduleDatabaseManager = ScheduleDatabaseManager.getInstance(activity);
 
+        // 월에맞는 date
         int date1 = date + cal.get(Calendar.DAY_OF_WEEK) -2;
 
-        String day = "";
-
-        try {
-            // 날짜 gridView에서 인덱스에 맞는 날짜 가져오기
-            day = (grid_month.getItemAtPosition(date)).toString();
-            Log.i("qwer1", day);
-
-        } catch (Exception e) {
-            // 날짜가 존재하지 않으면 " "로 초기화
-            day = "";
-            e.printStackTrace();
-            Log.i("qwer", date + "날짜 없음");
-
-        } finally {
-            // db query에 'date= ' 이렇게 빈 값으로 들어가는 것을 방지하기 위해 day를 0으로 세팅
-            if (day.equals(" ") || day == " " || day == null || day.equals("")) {
-                day = 0 + "";
-                Log.i("qwer", date + "final");
-
-            }
-        }
-
-
-        // SELECT title FROM schedule WHERE year=2021 and month=6 and date=3 and time_start like '06%'
         // select
         String[] columns = new String[]{"title", "time_start", "time_end", "place", "latitude", "longitude", "memo"};
-        // where
+        // where문
         String selection = "year=" + year + " and month=" + month + " and date=" + date;
-        Log.i("WeekDayFragment1", ""+date);
-        Log.i("WeekDayFragment1", selection);
 
         Cursor cursor = scheduleDatabaseManager.query(columns, selection, null, null, null, null);
         Cursor cursorChk = scheduleDatabaseManager.query(columns, selection, null, null, null, null);
@@ -267,7 +204,7 @@ public class MonthDayFragment extends Fragment {
 
         if (cursor != null) {
 
-            // title이 존재하지 않으면 격자 grid에 빈 칸 넣기
+            // title이 존재하지 않는곳에 date넣기
             if (!cursorChk.moveToNext()) {
                 calendarDay.set(date, calendarDay.get(date) );
                 Log.i("qwer", date +"타이틀없음" + calendarDay.get(date));
@@ -286,31 +223,24 @@ public class MonthDayFragment extends Fragment {
                         }else{
                             subTitle = cursor.getString(0);
                         }
+
+                        // grid에 date + title넣기
                         calendarDay.set(date1 , calendarDay.get(date1) + "\n" + subTitle); // title
 
-                        //items.add(cursor.getString(0));
-
-                        Log.i("qwer", "셋");
-                        //Log.i("qwer", "tmp" + tmpdate);
-
-
+                        // schedule에
                         vo.setTitle(cursor.getString(0)); // title
-                        //vo.setTime_start(cursor.getString(1)); // time_start
-                        //vo.setTime_end(cursor.getString(2)); // time_end
-                        //vo.setPlace(cursor.getString(3)); // place
+                        vo.setTime_start(cursor.getString(1)); // time_start
+                        vo.setTime_end(cursor.getString(2)); // time_end
+                        vo.setPlace(cursor.getString(3)); // place
                         //vo.setLatitude(cursor.getDouble(4)); // latitude
-                       // vo.setLongitude(cursor.getDouble(5)); // longitude
+                        //vo.setLongitude(cursor.getDouble(5)); // longitude
                         vo.setMemo(cursor.getString(6)); // memo
                     }
                 }
-
         }
 
-
         cursor.close(); // cursor 닫기
-
         return vo;
-
     }
 
 
@@ -328,11 +258,11 @@ public class MonthDayFragment extends Fragment {
         FragmentTransaction tr = getFragmentManager().beginTransaction();
         tr.replace(R.id.calendar, monthFragment);
         tr.commit();
-
-
-
     }
 
-
+    // 인터페이스 추가 정의
+    public interface OnSetYearMonthListener {
+        void onSetYearMonth(int year, int month);
+    }
 }
 

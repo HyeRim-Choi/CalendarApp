@@ -17,7 +17,6 @@ public class ScheduleVO implements Serializable {
     private int month;
     private int date;
 
-
     public int getIdx() {
         return idx;
     }

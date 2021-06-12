@@ -41,6 +41,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
 
     // DB
     ScheduleDatabaseManager scheduleDB;
+
     // DB에서 가져온 데이터
     ScheduleVO schedule;
 
@@ -66,6 +67,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_delete = findViewById(R.id.btn_delete);
 
+        // 맵뷰
 //        mapView = new MapView(this);
 //        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
 //        mapViewContainer.addView(mapView);
@@ -75,36 +77,33 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
         year = intent.getIntExtra("year", 0);
         month = intent.getIntExtra("month", 0);
         date = intent.getIntExtra("date", 0);
-//        time = intent.getIntExtra("time", 0);
+        time = intent.getIntExtra("time", 0);
         schedule = (ScheduleVO) intent.getSerializableExtra("schedule");
 
         if(schedule != null){
             // 상세 일정으로 세팅
             et_title.setText(schedule.getTitle());
-//            time_start.setHour(Integer.parseInt(String.valueOf(schedule.getTime_start().substring(0,2))));
-//            time_start.setMinute(Integer.parseInt(String.valueOf(schedule.getTime_start().substring(3))));
-//            time_end.setHour(Integer.parseInt(String.valueOf(schedule.getTime_end().substring(0,2))));
-//            time_end.setMinute(Integer.parseInt(String.valueOf(schedule.getTime_end().substring(3))));
+            time_start.setHour(Integer.parseInt(String.valueOf(schedule.getTime_start().substring(0,2))));
+            time_start.setMinute(Integer.parseInt(String.valueOf(schedule.getTime_start().substring(3))));
+            time_end.setHour(Integer.parseInt(String.valueOf(schedule.getTime_end().substring(0,2))));
+            time_end.setMinute(Integer.parseInt(String.valueOf(schedule.getTime_end().substring(3))));
             et_place.setText(schedule.getPlace());
 //            showMarker(schedule.getPlace(), schedule.getLatitude(), schedule.getLongitude());
 //            latitude = schedule.getLatitude();
 //            longitude = schedule.getLongitude();
             et_memo.setText(schedule.getMemo());
-
             chk = 1;
 
         }
+        // 일정추가할때 초기세팅
         else{
-            // 년도, 월, 일, 시간 초기 세팅
+            time_start.setHour(time);
+            time_start.setMinute(0);
+            time_end.setHour(time + 1);
+            time_end.setMinute(0);
             et_title.setText(year + "년 " + month + "월 " + date + "일 " + time + "시");
-//            time_start.setHour(time);
-//            time_start.setMinute(0);
-//            time_end.setHour(time + 1);
-//            time_end.setMinute(0);
-
-             chk = 2;
+            chk = 2;
         }
-
 
         btn_search.setOnClickListener(click);
         btn_save.setOnClickListener(click);
@@ -125,8 +124,9 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
             Intent resultIntent = new Intent(getApplicationContext(), MonthDayFragment.class);
 
             switch (v.getId()){
+
+                // 장소 검색
                 case R.id.btn_search:
-                    // 장소 검색
                     String search = et_place.getText().toString();
 
                     // 검색 창이 비어있다면
@@ -139,50 +139,47 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
                     getLocation(search);
 
                     // 마커 띄우기
-                    //showMarker(search, latitude, longitude);
-
+                    //showMarker(search, latitude, longitude)
                     break;
 
+                    // 저장
                 case R.id.btn_save:
 
-                    // insert
                     if(chk == 2){
                         long id = insertRows();
 
-                        // db에 insert가 성공적으로 되었다면
+                        // 저장 성공
                         if(id > 0){
                             Toast.makeText(MonthRegisterScheduleActivity.this,"저장 되었습니다",Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         }
+                        // 저장실패
                         else{
                             Toast.makeText(MonthRegisterScheduleActivity.this,"저장 실패하였습니다",Toast.LENGTH_SHORT).show();
                         }
                     }
 
-                    // update
+                    // 업데이트
                     else if(chk == 1){
                         long id = updateRows();
 
-                        // db에 update가 성공적으로 되었다면
+                        // 업데이트 성공
                         if(id > 0){
                             Toast.makeText(MonthRegisterScheduleActivity.this,"수정 되었습니다",Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         }
+                        // 업데이트 실패
                         else{
                             Toast.makeText(MonthRegisterScheduleActivity.this,"수정 실패하였습니다",Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                     break;
 
+                    // 삭제
                 case R.id.btn_delete:
 
-                    //delete
-
-                    // 일정이 존재한다면
                     if(chk == 1){
                         AlertDialog.Builder dialog = new AlertDialog.Builder(MonthRegisterScheduleActivity.this);
 
@@ -195,12 +192,13 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
                                 // 일정 삭제하기
                                 long id = deleteRow();
 
-                                // db에 delete가 성공적으로 되었다면
+                                // 삭제 성공
                                 if(id > 0){
                                     Toast.makeText(MonthRegisterScheduleActivity.this,"삭제 되었습니다",Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK, resultIntent);
                                     finish();
                                 }
+                                // 삭제 실패
                                 else{
                                     Toast.makeText(MonthRegisterScheduleActivity.this,"삭제 실패하였습니다",Toast.LENGTH_SHORT).show();
                                 }
@@ -209,19 +207,17 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
                         });
 
                         dialog.setNegativeButton("아니요", null);
-
                         dialog.show();
                     }
-
                     break;
 
-                    // 취소 클릭 시
+                    // 취소 클릭
                 case R.id.btn_cancel:
-                    // 돌아가기
                     setResult(RESULT_OK, resultIntent);
                     finish();
                     break;
             }
+
         }
     };
 
@@ -291,7 +287,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
     };
 
 
-    // insert
+    // 저장
     public long insertRows(){
         scheduleDB = ScheduleDatabaseManager.getInstance(MonthRegisterScheduleActivity.this);
 
@@ -300,7 +296,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
         String memo = et_memo.getText().toString();
 
 
-        // db에 insert하기 위해 "09:10"으로 시간 format 맞추기
+        // db에 저장하기위해 형식맞춤
         if(timeStart == null){
             String strTime = time + "";
             if(strTime.length() == 1){
@@ -316,7 +312,6 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
             timeEnd = strTime + ":0";
         }
 
-
         // insert(db에 저장)
         ContentValues addRow = new ContentValues();
 
@@ -331,12 +326,11 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
         addRow.put("month", month); // 월
         addRow.put("date", date); // 일
 
-
         return scheduleDB.insert(addRow);
 
     }
 
-    // update
+    // 업데이트
     @RequiresApi(api = Build.VERSION_CODES.M)
     public long updateRows(){
         scheduleDB = ScheduleDatabaseManager.getInstance(MonthRegisterScheduleActivity.this);
@@ -345,7 +339,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
         String place = et_place.getText().toString();
         String memo = et_memo.getText().toString();
 
-        // db에 update하기 위해 "09:10"으로 시간 format 맞추기
+        // db에 저장하기위해 형식맞춤
         if(timeStart == null){
             String strTime = time_start.getHour() + "";
             if(strTime.length() == 1){
@@ -361,7 +355,6 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
             timeEnd = strTime + ":" + time_end.getMinute();
         }
 
-        // update schedule set title = title, place = place,,,, where year=2021 and month=6 and date=3 and time_start like '06%'
         ContentValues updateRow = new ContentValues();
 
         updateRow.put("title", title); // 제목
@@ -377,7 +370,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
 
         String timeStr = time + "";
 
-        // "09" format으로 세팅
+        // db에 저장하기위해 형식맞춤
         if(timeStr.length() == 1){
             timeStr = "0" + timeStr;
         }
@@ -387,22 +380,20 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity{
        return scheduleDB.update(updateRow, whereClause, null);
     }
 
-    // delete
+    // 삭제
     public long deleteRow(){
         scheduleDB = ScheduleDatabaseManager.getInstance(MonthRegisterScheduleActivity.this);
 
         String timeStr = time + "";
 
-        // "09" format으로 세팅
+        // db에서 찾기위해 형식맞춤
         if(timeStr.length() == 1){
             timeStr = "0" + timeStr;
         }
 
         // delete from schedule where
         String whereClause = "year=" + year + " and month=" + month + " and date=" + date  + " and time_start like '" + timeStr + "%'";
-
         return scheduleDB.delete(whereClause,null);
     }
-
 
 }
