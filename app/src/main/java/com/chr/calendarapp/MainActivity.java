@@ -125,9 +125,4 @@ public class MainActivity extends AppCompatActivity implements WeekDayFragment.O
         my_toolbar.setTitle(setYear + "년 " + setMonth + "월");
     }
 
-
-    public void restart(){
-        MonthFragment monthFragment = new MonthFragment(year, month, date);
-        getSupportFragmentManager().beginTransaction().replace(R.id.calendar, monthFragment).commit();
-    }
 }

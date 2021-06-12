@@ -94,9 +94,6 @@ public class MonthFragment extends Fragment{
             setyear--;
             setmonth = 12;
         }
-
-        // Prev 년도, 월 전달
-        //setYear = year;
-        //setMonth = month;
     }
+
 }
