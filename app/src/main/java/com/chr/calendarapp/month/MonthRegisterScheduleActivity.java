@@ -1,9 +1,7 @@
 package com.chr.calendarapp.month;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -16,31 +14,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-
 import com.chr.calendarapp.R;
 import com.chr.calendarapp.database.ScheduleDatabaseManager;
 import com.chr.calendarapp.database.ScheduleVO;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import android.os.Bundle;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -118,7 +104,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity implements 
             chk = 2;
         }
 
-
+        // 버튼 클릭시
         btn_search.setOnClickListener(click);
         btn_save.setOnClickListener(click);
         btn_delete.setOnClickListener(click);
@@ -129,7 +115,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity implements 
         time_end.setOnTimeChangedListener(timePicker);
 
 
-        // 맵
+        // 구글 맵
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -240,7 +226,7 @@ public class MonthRegisterScheduleActivity extends AppCompatActivity implements 
     };
 
 
-    // 주소 이름을 통해 위도 경도 받기
+    // 이름을 통해 위도 경도 받기, 맵이동
     public void getLocation(String search) {
 
         try {
