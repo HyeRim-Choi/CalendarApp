@@ -24,7 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.Calendar;
 
 
 public class WeekDayFragment extends Fragment {
@@ -262,13 +262,28 @@ public class WeekDayFragment extends Fragment {
             switch (v.getId()){
                 // 일정 추가 버튼 클릭 시
                 case R.id.fab_add:
-                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
-                    i.putExtra("year", year);
-                    i.putExtra("month", month);
-                    i.putExtra("date", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
-                    i.putExtra("time", gridWeekPosition / 7);
-                    i.putExtra("schedule", (Serializable) null);
-                    startActivityForResult(i, 1000);
+                    Log.i("check", "" + gridWeekPosition);
+                    if(gridWeekPosition > 0){
+                        Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
+                        i.putExtra("year", year);
+                        i.putExtra("month", month);
+                        i.putExtra("date", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));
+                        i.putExtra("time", gridWeekPosition / 7);
+                        i.putExtra("schedule", (Serializable) null);
+                        startActivityForResult(i, 1000);
+                    }
+
+                    else{
+                        Calendar cal = Calendar.getInstance();
+                        Intent intent = new Intent(activity, WeekRegisterScheduleActivity.class);
+                        intent.putExtra("year", cal.get(Calendar.YEAR));
+                        intent.putExtra("month", cal.get(Calendar.MONTH)+1);
+                        intent.putExtra("date", cal.get(Calendar.DATE));
+                        intent.putExtra("time", cal.get(Calendar.HOUR_OF_DAY));
+                        intent.putExtra("schedule", (Serializable) null);
+                        startActivityForResult(intent, 1000);
+                    }
+
                     break;
             }
         }
