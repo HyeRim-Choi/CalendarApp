@@ -1,5 +1,6 @@
 package com.chr.calendarapp.month;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.chr.calendarapp.R;
+
+import java.time.MonthDay;
 
 
 public class MonthFragment extends Fragment{
@@ -47,12 +50,13 @@ public class MonthFragment extends Fragment{
             @Override
             public void onPageSelected(int position) {
                 Log.i("test", " selected position "+  position);
+
                 //왼쪽으로 이동하면
                 if(position < postmp){
                     setPrevYearMonth();
                 }
                 //오른쪽으로 이동하면
-                else if(position > postmp){
+                else if(position > postmp) {
                     setNextYearMonth();
                 }
                 //AppBar설정

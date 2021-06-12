@@ -8,8 +8,5 @@
     <item
         android:id="@+id/week"
         android:title="@string/week"/>
-    <item
-        android:id="@+id/tmp"
-        android:title="일정추가"/>
 
 </menu>

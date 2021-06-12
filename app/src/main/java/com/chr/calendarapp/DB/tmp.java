@@ -1,4 +1,7 @@
-package com.chr.calendarapp.week;
+package com.chr.calendarapp.DB;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -10,28 +13,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+import net.daum.mf.map.api.MapPOIItem;
+import net.daum.mf.map.api.MapPoint;
+import net.daum.mf.map.api.MapView;
 
 import com.chr.calendarapp.R;
 import com.chr.calendarapp.database.ScheduleDatabaseManager;
 import com.chr.calendarapp.database.ScheduleVO;
 
-import net.daum.mf.map.api.MapPOIItem;
-import net.daum.mf.map.api.MapPoint;
-import net.daum.mf.map.api.MapView;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class WeekRegisterScheduleActivity extends AppCompatActivity{
+public class tmp extends AppCompatActivity{
 
     EditText et_title, et_place, et_memo;
     TimePicker time_start, time_end;
@@ -67,9 +66,9 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_delete = findViewById(R.id.btn_delete);
 
-        mapView = new MapView(this);
-        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        mapViewContainer.addView(mapView);
+//        mapView = new MapView(this);
+//        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+//        mapViewContainer.addView(mapView);
 
         // 데이터 받아오기
         Intent intent = getIntent();
@@ -103,7 +102,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
             time_end.setHour(time + 1);
             time_end.setMinute(0);
 
-             chk = 2;
+            chk = 2;
         }
 
 
@@ -132,7 +131,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
                     // 검색 창이 비어있다면
                     if(search == null || search.isEmpty()){
-                        Toast.makeText(WeekRegisterScheduleActivity.this, "장소를 검색해주세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(tmp.this, "장소를 검색해주세요", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -152,12 +151,12 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
                         // db에 insert가 성공적으로 되었다면
                         if(id > 0){
-                            Toast.makeText(WeekRegisterScheduleActivity.this,"저장 되었습니다",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(tmp.this,"저장 되었습니다",Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         }
                         else{
-                            Toast.makeText(WeekRegisterScheduleActivity.this,"저장 실패하였습니다",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(tmp.this,"저장 실패하였습니다",Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -167,12 +166,12 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
                         // db에 update가 성공적으로 되었다면
                         if(id > 0){
-                            Toast.makeText(WeekRegisterScheduleActivity.this,"수정 되었습니다",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(tmp.this,"수정 되었습니다",Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK, resultIntent);
                             finish();
                         }
                         else{
-                            Toast.makeText(WeekRegisterScheduleActivity.this,"수정 실패하였습니다",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(tmp.this,"수정 실패하였습니다",Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -185,7 +184,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
                     // 일정이 존재한다면
                     if(chk == 1){
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(WeekRegisterScheduleActivity.this);
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(tmp.this);
 
                         dialog.setTitle("삭제 확인");
                         dialog.setMessage("일정을 정말 삭제하시겠습니까?");
@@ -198,12 +197,12 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
                                 // db에 delete가 성공적으로 되었다면
                                 if(id > 0){
-                                    Toast.makeText(WeekRegisterScheduleActivity.this,"삭제 되었습니다",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(tmp.this,"삭제 되었습니다",Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK, resultIntent);
                                     finish();
                                 }
                                 else{
-                                    Toast.makeText(WeekRegisterScheduleActivity.this,"삭제 실패하였습니다",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(tmp.this,"삭제 실패하였습니다",Toast.LENGTH_SHORT).show();
                                 }
 
                             }
@@ -216,7 +215,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
                     break;
 
-                    // 취소 클릭 시
+                // 취소 클릭 시
                 case R.id.btn_cancel:
                     // 돌아가기
                     setResult(RESULT_OK, resultIntent);
@@ -294,7 +293,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
     // insert
     public long insertRows(){
-        scheduleDB = ScheduleDatabaseManager.getInstance(WeekRegisterScheduleActivity.this);
+        scheduleDB = ScheduleDatabaseManager.getInstance(tmp.this);
 
         String title = et_title.getText().toString();
         String place = et_place.getText().toString();
@@ -340,7 +339,7 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
     // update
     @RequiresApi(api = Build.VERSION_CODES.M)
     public long updateRows(){
-        scheduleDB = ScheduleDatabaseManager.getInstance(WeekRegisterScheduleActivity.this);
+        scheduleDB = ScheduleDatabaseManager.getInstance(tmp.this);
 
         String title = et_title.getText().toString();
         String place = et_place.getText().toString();
@@ -385,12 +384,12 @@ public class WeekRegisterScheduleActivity extends AppCompatActivity{
 
         String whereClause = "year=" + year + " and month=" + month + " and date=" + date  + " and time_start like '" + timeStr + "%'";
 
-       return scheduleDB.update(updateRow, whereClause, null);
+        return scheduleDB.update(updateRow, whereClause, null);
     }
 
     // delete
     public long deleteRow(){
-        scheduleDB = ScheduleDatabaseManager.getInstance(WeekRegisterScheduleActivity.this);
+        scheduleDB = ScheduleDatabaseManager.getInstance(tmp.this);
 
         String timeStr = time + "";
 

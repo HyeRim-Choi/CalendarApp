@@ -1,18 +1,12 @@
 package com.chr.calendarapp.week;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.os.Parcelable;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +17,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chr.calendarapp.MainActivity;
 import com.chr.calendarapp.R;
-import com.chr.calendarapp.AddRegisterScheduleActivity;
 import com.chr.calendarapp.database.ScheduleDatabaseManager;
 import com.chr.calendarapp.database.ScheduleVO;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -246,7 +238,7 @@ public class WeekDayFragment extends Fragment {
                     ScheduleVO vo = selectSchedule(year, month, gridWeekPosition % 7, ""+(gridWeekPosition / 7));
 
                     // vo를 가지고 상세일정 창으로 이동하기
-                    Intent i = new Intent(activity, WeekRegisterScheduleActivity.class);
+                    Intent i = new Intent(activity,WeekRegisterScheduleActivity.class);
                     i.putExtra("year", year);
                     i.putExtra("month", month);
                     i.putExtra("date", (Integer)grid_week_day.getItemAtPosition(gridWeekPosition % 7));

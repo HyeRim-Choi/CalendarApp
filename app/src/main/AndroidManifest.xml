@@ -14,8 +14,8 @@
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.CalendarApp">
-        <activity android:name=".AddRegisterScheduleActivity"></activity>
-        <activity android:name=".week.WeekRegisterScheduleActivity"></activity>
+        <activity android:name=".DB.tmp"></activity>
+        <activity android:name=".month.MonthRegisterScheduleActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize">
